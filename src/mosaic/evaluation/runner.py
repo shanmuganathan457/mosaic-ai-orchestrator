@@ -34,11 +34,15 @@ class EvaluationRateLimitedProvider(BaseLLMProvider):
         self,
         provider: BaseLLMProvider,
         min_interval_seconds: float = settings.GEMINI_EVAL_MIN_INTERVAL_SECONDS,
+        max_retries: int = 3,
+        retry_backoff_factor: float = 2.0,
         time_func=time.time,
         sleep_func=time.sleep,
     ) -> None:
         self.provider = provider
         self.min_interval_seconds = min_interval_seconds
+        self.max_retries = max_retries
+        self.retry_backoff_factor = retry_backoff_factor
         self._time_func = time_func
         self._sleep_func = sleep_func
         self._last_request_time: Optional[float] = None
@@ -52,22 +56,47 @@ class EvaluationRateLimitedProvider(BaseLLMProvider):
         return self.provider.model_name
 
     def generate(self, request: LLMRequest) -> LLMResponse:
-        """Throttles generate requests ensuring min_interval_seconds between consecutive calls."""
-        now = self._time_func()
-        if self._last_request_time is not None:
-            elapsed = now - self._last_request_time
-            if elapsed < self.min_interval_seconds:
-                sleep_duration = self.min_interval_seconds - elapsed
-                logger.info(
-                    "Evaluation rate limit pacing: sleeping %.2fs (min_interval=%.2fs)",
-                    sleep_duration,
-                    self.min_interval_seconds,
-                )
-                self._sleep_func(sleep_duration)
+        """Throttles generate requests ensuring min_interval_seconds between calls, retrying transient 503 errors."""
+        attempt = 0
+        backoff_delay = 2.0
 
-        # Record timestamp immediately before executing request
-        self._last_request_time = self._time_func()
-        return self.provider.generate(request)
+        while True:
+            now = self._time_func()
+            if self._last_request_time is not None:
+                elapsed = now - self._last_request_time
+                if elapsed < self.min_interval_seconds:
+                    sleep_duration = self.min_interval_seconds - elapsed
+                    logger.info(
+                        "Evaluation rate limit pacing: sleeping %.2fs (min_interval=%.2fs)",
+                        sleep_duration,
+                        self.min_interval_seconds,
+                    )
+                    self._sleep_func(sleep_duration)
+
+            self._last_request_time = self._time_func()
+
+            try:
+                return self.provider.generate(request)
+            except Exception as e:
+                err_msg = str(e)
+                # Check for 503 UNAVAILABLE transient server overload
+                is_503 = "503" in err_msg or "UNAVAILABLE" in err_msg.upper()
+                # Ensure hard stop on 429 quota exhaustion or non-503 client/validation errors
+                is_429 = "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg.upper()
+
+                if is_503 and not is_429 and attempt < self.max_retries:
+                    attempt += 1
+                    logger.warning(
+                        "Evaluation transient 503 retry attempt %d/%d after backoff %.1fs. Error: %s",
+                        attempt,
+                        self.max_retries,
+                        backoff_delay,
+                        err_msg,
+                    )
+                    self._sleep_func(backoff_delay)
+                    backoff_delay *= self.retry_backoff_factor
+                    continue
+                raise
 
 
 class EvaluationRunner:
