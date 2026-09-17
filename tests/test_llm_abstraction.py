@@ -67,8 +67,13 @@ def test_mock_llm_provider_repeatability():
     assert resp1.usage_info == resp2.usage_info
 
 
-def test_llm_configuration_defaults():
-    """Verify default LLM settings point to offline mock configuration."""
-    assert settings.LLM_PROVIDER == "mock"
-    assert settings.LLM_MODEL == "mock-deterministic-v1"
-    assert settings.LLM_ENABLED is False
+def test_llm_configuration_defaults(monkeypatch):
+    """Verify default LLM settings point to offline mock configuration when no env overrides are present."""
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    monkeypatch.delenv("LLM_MODEL", raising=False)
+    monkeypatch.delenv("LLM_ENABLED", raising=False)
+    from mosaic.config.settings import Settings
+    default_settings = Settings(_env_file=None)
+    assert default_settings.LLM_PROVIDER == "mock"
+    assert default_settings.LLM_MODEL == "mock-deterministic-v1"
+    assert default_settings.LLM_ENABLED is False

@@ -57,18 +57,19 @@ def test_gemini_provider_generate_basic_request():
 
 
 def test_gemini_provider_generate_structured_json_request():
-    """Verify structured schema request forces json mime type and parses JSON output."""
+    """Verify structured schema request forces json mime type and passes response_schema to Gemini API."""
     mock_client = MagicMock()
     mock_response = MagicMock()
     mock_response.text = '{"intents": [{"category": "BILLING"}]}'
     mock_response.usage_metadata = None
     mock_client.models.generate_content.return_value = mock_response
 
+    test_schema = {"type": "object", "properties": {"intents": {"type": "array"}}}
     provider = GeminiProvider(client=mock_client)
     req = LLMRequest(
         system_prompt="sys",
         user_prompt="usr",
-        structured_schema={"type": "object"}
+        structured_schema=test_schema
     )
     res = provider.generate(req)
 
@@ -76,6 +77,7 @@ def test_gemini_provider_generate_structured_json_request():
     mock_client.models.generate_content.assert_called_once()
     _, kwargs = mock_client.models.generate_content.call_args
     assert kwargs["config"].response_mime_type == "application/json"
+    assert kwargs["config"].response_schema == test_schema
 
 
 def test_gemini_provider_malformed_json_response():

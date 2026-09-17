@@ -78,6 +78,7 @@ class GeminiProvider(BaseLLMProvider):
         # Configure structured JSON output if schema requested
         if request.structured_schema is not None:
             config_kwargs["response_mime_type"] = "application/json"
+            config_kwargs["response_schema"] = request.structured_schema
 
         config = types.GenerateContentConfig(**config_kwargs)
 
