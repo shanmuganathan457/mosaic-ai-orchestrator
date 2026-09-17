@@ -39,10 +39,11 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 - [x] **Phase 3: Semantic State Compiler & Mock Domain Agents** (`src/mosaic/compiler/`, `src/mosaic/agents/`)
 - [x] **Phase 4: Deterministic Intent Decomposition Engine & End-to-End Orchestrator** (`src/mosaic/intake/`, `src/mosaic/orchestrator.py`)
 - [x] **Phase 5A: Provider-Agnostic LLM Abstraction Layer & Deterministic Mock LLM** (`src/mosaic/llm/`)
-  - Abstract Interface: `BaseLLMProvider` (`base.py`)
-  - Provider Models & Exceptions: `LLMRequest`, `LLMResponse`, `LLMError` (`models.py`)
-  - Offline Deterministic Mock: `MockLLMProvider` (`mock.py`)
-  - 33 passing pytest unit & end-to-end pipeline tests (`tests/`)
+- [x] **Phase 5B: LLM-Backed Intent Decomposition Engine** (`src/mosaic/intake/llm_decomposer.py`)
+  - Interchangeable Strategy: `BaseIntentDecomposer` (`decomposer.py`)
+  - Structured output boundary validation via Pydantic (`LLMIntentDecomposer`)
+  - Strategy comparability between Deterministic vs. LLM Intake in `MosaicOrchestrator`
+  - 40 passing pytest unit & pipeline tests (`tests/`)
 
 ---
 
@@ -51,14 +52,15 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 ```
 Incoming Customer Communication (Raw Message)
               │
+    ┌─────────┴─────────┐
+    ▼                   ▼
+Deterministic         LLM Intent
+Decomposer            Decomposer
+    │                   │
+    └─────────┬─────────┘
+              │ (BaseIntentDecomposer strategy)
               ▼
-  ┌───────────────────────┐
-  │ LLM Abstraction Layer │ <-- Provider-Agnostic (Mock / Ollama / Gemini / OpenAI)
-  │ (mosaic.llm)          │
-  └───────────┬───────────┘
-              │
-              ▼
-    1. Intent Decomposition Engine (IntentSpans)
+   1. Intent & Evidence Spans (IntentSpans)
               │
               ▼
   2. Specialized Mock Domain Agents (AgentProposals)
@@ -92,7 +94,7 @@ Incoming Customer Communication (Raw Message)
 ```
 mosaic-ai-orchestrator/
 ├── docs/
-│   ├── ARCHITECTURE.md          # Architectural specifications & Phase 5A LLM abstraction
+│   ├── ARCHITECTURE.md          # Architectural specifications & Phase 5B LLM intake
 │   └── RESEARCH_ALIGNMENT.md    # Mapping code modules to research document
 ├── src/
 │   └── mosaic/
@@ -110,9 +112,10 @@ mosaic-ai-orchestrator/
 │       │   │   ├── __init__.py
 │       │   │   └── schemas.py
 │       │   └── __init__.py
-│       ├── intake/              # Deterministic Intent Decomposition Engine
+│       ├── intake/              # Intake Engines (Deterministic & LLM Strategy)
 │       │   ├── __init__.py
-│       │   └── decomposer.py
+│       │   ├── decomposer.py
+│       │   └── llm_decomposer.py
 │       ├── llm/                 # Provider-Agnostic LLM Abstraction Layer
 │       │   ├── __init__.py
 │       │   ├── base.py
@@ -136,6 +139,7 @@ mosaic-ai-orchestrator/
 │   ├── test_end_to_end_pipeline.py
 │   ├── test_intake_and_orchestrator.py
 │   ├── test_llm_abstraction.py
+│   ├── test_llm_decomposer.py
 │   └── test_validation_engine.py
 ├── pyproject.toml               # Build & dependency configuration
 └── README.md                    # Project documentation
@@ -169,7 +173,7 @@ mosaic-ai-orchestrator/
    pip install -e ".[dev]"
    ```
 
-4. **Run Complete Pytest Suite (33 Tests):**
+4. **Run Complete Pytest Suite (40 Tests):**
    ```bash
    python -m pytest
    ```

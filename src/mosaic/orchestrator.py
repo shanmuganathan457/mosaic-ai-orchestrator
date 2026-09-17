@@ -1,7 +1,7 @@
 """MOSAIC End-to-End Orchestrator Pipeline.
 
-This module orchestrates the complete deterministic MOSAIC pipeline:
-Raw Customer Input -> Intent Intake -> Mock Domain Agents -> Semantic Compiler -> Validation Engine.
+This module orchestrates the complete MOSAIC pipeline:
+Raw Customer Input -> Intent Intake (Deterministic OR LLM Strategy) -> Domain Agents -> Semantic Compiler -> Validation Engine.
 """
 
 import logging
@@ -23,7 +23,7 @@ from mosaic.domain.models import (
     PolicyRule,
     ValidationResult,
 )
-from mosaic.intake.decomposer import IntentDecompositionEngine
+from mosaic.intake.decomposer import BaseIntentDecomposer, IntentDecompositionEngine
 from mosaic.validation import DefaultValidationEngine
 
 logger = logging.getLogger("mosaic.orchestrator")
@@ -34,7 +34,7 @@ class MosaicOrchestrator:
 
     def __init__(
         self,
-        intake_engine: IntentDecompositionEngine | None = None,
+        intake_engine: BaseIntentDecomposer | None = None,
         compiler: SemanticStateCompiler | None = None,
         validation_engine: DefaultValidationEngine | None = None,
         agent_registry: Dict[str, BaseMockAgent] | None = None,
@@ -64,9 +64,9 @@ class MosaicOrchestrator:
             ValidationResult containing verdict (ALLOW, BLOCK, ESCALATED), allowed actions,
             blocked actions, and diagnostic conflicts.
         """
-        logger.info("Processing case for customer_id=%s...", customer_id)
+        logger.info("Processing case for customer_id=%s using intake strategy %s...", customer_id, self.intake_engine.__class__.__name__)
 
-        # 1. Intake & Intent Decomposition
+        # 1. Intake & Intent Decomposition (Strategy Pattern)
         case, subtask_mappings = self.intake_engine.create_case_from_intake(
             customer_id=customer_id,
             raw_message=raw_message,

@@ -1,9 +1,10 @@
-"""MOSAIC Deterministic Intent & Evidence Decomposition Engine.
+"""MOSAIC Intent & Evidence Decomposition Strategy Interface and Base Implementation.
 
-This module provides a rule-based, deterministic intent extractor and case orchestrator
-that converts raw customer text communications into structured IntentSpan objects and SubTask records.
+Defines the abstract BaseIntentDecomposer interface ensuring strategy interchangeability between
+deterministic rule-based and LLM-backed intent extractors.
 """
 
+from abc import ABC, abstractmethod
 import logging
 import re
 from typing import Any, Dict, List, Tuple
@@ -19,6 +20,76 @@ from mosaic.domain.models.schemas import (
 )
 
 logger = logging.getLogger("mosaic.intake.decomposer")
+
+
+class BaseIntentDecomposer(ABC):
+    """Abstract Strategy interface for intent and evidence decomposition engines."""
+
+    @abstractmethod
+    def decompose_message(self, raw_message: str) -> List[IntentSpan]:
+        """Parses raw text and extracts evidence-backed IntentSpan records."""
+        pass
+
+    def create_case_from_intake(
+        self,
+        customer_id: str,
+        raw_message: str,
+        initial_facts: Dict[str, Any] | None = None,
+        active_flags: List[str] | None = None,
+        agent_mapping: Dict[str, str] | None = None,
+    ) -> Tuple[Case, List[Tuple[SubTask, IntentSpan, str]]]:
+        """Creates a canonical Case container, extracts IntentSpans, and generates SubTask assignments."""
+        spans = self.decompose_message(raw_message)
+
+        state = CaseState(
+            case_id=UUID("00000000-0000-0000-0000-000000000000"),
+            current_facts=initial_facts or {},
+            active_flags=active_flags or [],
+        )
+
+        case = Case(
+            customer_id=customer_id,
+            raw_message=raw_message,
+            status=CaseStatus.ANALYZING,
+            intents=spans,
+            state=state,
+        )
+
+        case = case.model_copy(update={"state": case.state.model_copy(update={"case_id": case.id})})
+
+        subtask_mappings: List[Tuple[SubTask, IntentSpan, str]] = []
+        sub_tasks: List[SubTask] = []
+
+        default_agent_map = {
+            "restrict_account": "SecurityMockAgent",
+            "refund_payment": "BillingMockAgent",
+            "cancel_subscription": "SubscriptionMockAgent",
+            "restore_login_access": "AccessMockAgent",
+        }
+        active_agent_map = {**default_agent_map, **(agent_mapping or {})}
+
+        for span in spans:
+            assigned_agent = active_agent_map.get(span.intent_name, "GeneralMockAgent")
+
+            subtask = SubTask(
+                case_id=case.id,
+                intent_span_id=span.id,
+                assigned_agent=assigned_agent,
+            )
+            sub_tasks.append(subtask)
+            subtask_mappings.append((subtask, span, assigned_agent))
+
+        case = case.model_copy(update={"sub_tasks": sub_tasks})
+
+        logger.info(
+            "Created Case id=%s for customer=%s with %d intents and %d sub-tasks.",
+            case.id,
+            customer_id,
+            len(spans),
+            len(sub_tasks),
+        )
+
+        return case, subtask_mappings
 
 
 class IntentDecompositionPattern:
@@ -68,8 +139,8 @@ DEFAULT_PATTERNS = [
 ]
 
 
-class IntentDecompositionEngine:
-    """Rule-based, deterministic intent decomposition and sub-task creation engine."""
+class IntentDecompositionEngine(BaseIntentDecomposer):
+    """Rule-based, deterministic intent decomposition engine."""
 
     def __init__(self, patterns: List[IntentDecompositionPattern] | None = None) -> None:
         self.patterns = patterns or DEFAULT_PATTERNS
@@ -83,7 +154,6 @@ class IntentDecompositionEngine:
                 start, end = match.span()
                 matched_text = match.group(0)
 
-                # Extract metadata IDs if present in text (e.g., payment_101 or sub_202)
                 metadata: Dict[str, Any] = {}
                 pay_match = re.search(r"pay_\w+", raw_message, re.IGNORECASE)
                 if pay_match:
@@ -111,62 +181,3 @@ class IntentDecompositionEngine:
 
         logger.debug("Decomposed message into %d intent spans.", len(spans))
         return spans
-
-    def create_case_from_intake(
-        self,
-        customer_id: str,
-        raw_message: str,
-        initial_facts: Dict[str, Any] | None = None,
-        active_flags: List[str] | None = None,
-    ) -> Tuple[Case, List[Tuple[SubTask, IntentSpan, str]]]:
-        """Creates a canonical Case container, extracts IntentSpans, and generates SubTask assignments."""
-        spans = self.decompose_message(raw_message)
-        
-        # Build CaseState
-        state = CaseState(
-            case_id=UUID("00000000-0000-0000-0000-000000000000"),  # Temporary until Case ID generated
-            current_facts=initial_facts or {},
-            active_flags=active_flags or [],
-        )
-
-        case = Case(
-            customer_id=customer_id,
-            raw_message=raw_message,
-            status=CaseStatus.ANALYZING,
-            intents=spans,
-            state=state,
-        )
-
-        # Update case_id on state
-        case = case.model_copy(update={"state": case.state.model_copy(update={"case_id": case.id})})
-
-        # Generate subtasks and map to target assigned agents
-        subtask_mappings: List[Tuple[SubTask, IntentSpan, str]] = []
-        sub_tasks: List[SubTask] = []
-
-        for span in spans:
-            assigned_agent = "GeneralMockAgent"
-            for pat in self.patterns:
-                if pat.intent_name == span.intent_name:
-                    assigned_agent = pat.assigned_agent
-                    break
-
-            subtask = SubTask(
-                case_id=case.id,
-                intent_span_id=span.id,
-                assigned_agent=assigned_agent,
-            )
-            sub_tasks.append(subtask)
-            subtask_mappings.append((subtask, span, assigned_agent))
-
-        case = case.model_copy(update={"sub_tasks": sub_tasks})
-
-        logger.info(
-            "Created Case id=%s for customer=%s with %d intents and %d sub-tasks.",
-            case.id,
-            customer_id,
-            len(spans),
-            len(sub_tasks),
-        )
-
-        return case, subtask_mappings

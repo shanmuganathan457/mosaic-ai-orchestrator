@@ -1,7 +1,7 @@
 # MOSAIC Architecture & Technical Specifications
 
 **Multi-Intent Orchestration & State-Aware Intelligent Coordination**  
-*Version 0.5.0 — Phase 5A Architecture & LLM Abstraction Specifications*
+*Version 0.6.0 — Phase 5B Architecture & LLM Intent Decomposition Specifications*
 
 ---
 
@@ -16,60 +16,54 @@ MOSAIC introduces a **deterministic, inspectable, state-dependent Validation Eng
 
 ---
 
-## 2. System Architecture & LLM Abstraction Boundary
+## 2. System Architecture & Intake Strategy Pattern
 
-The system maintains strict decoupling between non-deterministic LLM perception/generation models and deterministic validation logic.
+The architecture supports interchangeable intake strategies (`BaseIntentDecomposer`), allowing direct experimental comparison between Rule-Based Deterministic Extraction and LLM-Backed Intent Extraction.
 
 ```
-                  Customer Email / Raw Message
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │   LLM Provider      │
-                    │ (Mock / Ollama /    │
-                    │  Gemini / OpenAI)   │
-                    └──────────┬──────────┘
-                               │ (LLMRequest / LLMResponse)
-                               ▼
-                    ┌─────────────────────┐
-                    │ LLM Abstraction     │
-                    │ (BaseLLMProvider)   │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                         IntentSpan[]
-                               │
-                               ▼
-                          SubTask[]
-                               │
-                               ▼
-                         Domain Agents
-                               │
-                               ▼
-                      Semantic Compiler
-                               │
-                               ▼
-                           Action[]
-                               │
-                               ▼
-             ═════════════════════════════════════
-                 MOSAIC VALIDATION ENGINE
-                 (100% DETERMINISTIC, NO LLM)
-             ═════════════════════════════════════
-                               │
-                       ┌───────┼───────┐
-                       ▼       ▼       ▼
-                     ALLOW   BLOCK  ESCALATE
+                      Customer Email / Raw Message
+                                    │
+                  ┌─────────────────┴─────────────────┐
+                  │                                   │
+                  ▼                                   ▼
+    DeterministicIntentDecomposer           LLMIntentDecomposer
+    (Pattern-matching baseline)             (LLMProvider abstraction)
+                  │                                   │
+                  └─────────────────┬─────────────────┘
+                                    │
+                                    ▼
+                               IntentSpan[]
+                                    │
+                                    ▼
+                                SubTask[]
+                                    │
+                                    ▼
+                             Domain Agents
+                                    │
+                                    ▼
+                           Semantic Compiler
+                                    │
+                                    ▼
+                                Action[]
+                                    │
+                                    ▼
+                 ═════════════════════════════════════
+                     MOSAIC VALIDATION ENGINE
+                     (100% DETERMINISTIC, NO LLM)
+                 ═════════════════════════════════════
+                                    │
+                            ┌───────┼───────┐
+                            ▼       ▼       ▼
+                          ALLOW   BLOCK  ESCALATE
 ```
 
-### Component Responsibilities & LLM Isolation
+### Component Responsibilities & LLM Boundaries
 
-1. **LLM Abstraction Interface (`mosaic.llm`):** Abstract provider interface (`BaseLLMProvider`), request payload (`LLMRequest`), response container (`LLMResponse`), and exception definitions. Decouples MOSAIC from specific LLM provider SDKs (OpenAI, Gemini, Ollama, LiteLLM).
-2. **Mock LLM Provider (`MockLLMProvider`):** 100% offline, deterministic implementation of `BaseLLMProvider` for research experiments and unit testing without network or GPU dependencies.
-3. **Intent Decomposition Engine (`mosaic.intake`):** Rule-based or LLM-backed intent extractor parsing raw customer messages into non-overlapping `IntentSpan` objects and creating assigned `SubTask` records.
-4. **Specialized Domain Agents (`mosaic.agents`):** Domain-specific worker agents (Security, Billing, Subscription, Access) producing unvalidated candidate `AgentProposal` payloads.
-5. **Semantic State Compiler (`mosaic.compiler`):** Formats natural language / semi-structured proposals into strongly-typed `Action` primitives. Performs zero validation decision making.
-6. **Deterministic Validation Engine (`mosaic.validation`):** Evaluates structured actions against current `CaseState`, `Dependency` graphs, and `PolicyRule`s strictly deterministically **without invoking an LLM**.
+1. **Intake Strategy Boundary (`BaseIntentDecomposer`):** Strategy interface for intent extraction. Guarantees that both `IntentDecompositionEngine` (rule-based) and `LLMIntentDecomposer` (LLM-backed) output identical `IntentSpan[]` representations.
+2. **LLM Intent Decomposer (`LLMIntentDecomposer`):** Uses `BaseLLMProvider` to extract intents, verbatim evidence spans, and confidence scores. Uses strict Pydantic boundary schemas (`ExtractedIntentsPayload`) to validate output formatting. **The LLM is strictly prohibited from making validation decisions (`ALLOW`, `BLOCK`, `ESCALATE`).**
+3. **Specialized Domain Agents (`mosaic.agents`):** Domain-specific worker agents (Security, Billing, Subscription, Access) producing unvalidated candidate `AgentProposal` payloads based on assigned subtasks.
+4. **Semantic State Compiler (`mosaic.compiler`):** Formats natural language / semi-structured proposals into strongly-typed `Action` primitives. Performs zero validation decision making.
+5. **Deterministic Validation Engine (`mosaic.validation`):** Evaluates structured actions against current `CaseState`, `Dependency` graphs, and `PolicyRule`s strictly deterministically **without invoking an LLM**.
 
 ---
 
@@ -79,4 +73,4 @@ The system maintains strict decoupling between non-deterministic LLM perception/
 - **Web Framework:** FastAPI (async endpoints, OpenAPI spec integration, fast execution).
 - **Data Validation & Schemas:** Pydantic v2 (strict validation, fast serialization).
 - **LLM Abstraction Layer:** Custom provider-agnostic Pydantic/ABC boundary (`mosaic.llm`).
-- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, intake engine, LLM abstraction, and validation engine.
+- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, intake strategies, LLM abstraction, and validation engine.

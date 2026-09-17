@@ -43,10 +43,10 @@ class MockLLMProvider(BaseLLMProvider):
 
         # If a structured schema was requested and no fixed mock output was set, provide a simple schema-conforming dict
         if request.structured_schema and structured_output is None:
-            structured_output = {"mock_extracted_intent": "general_inquiry", "confidence": 1.0}
+            structured_output = {"intents": []}
 
         content = self.default_response_text
-        if structured_output and not self.fixed_structured_output:
+        if structured_output is not None and self.default_response_text == "Mock LLM response generated successfully.":
             content = json.dumps(structured_output)
 
         return LLMResponse(
