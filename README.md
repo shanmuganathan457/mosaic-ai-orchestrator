@@ -47,7 +47,12 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
   - Baselines: Baseline A (Single-Intent Route), Baseline B (Direct Multi-Agent Synthesis without Validation), MOSAIC (State Validation)
   - Reusable evaluation harness: `EvaluationRunner` producing machine-readable `evaluation_results.json` reports
   - Objective research metrics: Verdict Accuracy, Micro-Aggregated Intent Precision/Recall/F1, Conflict Precision/Recall/F1, Escalation Precision, False Escalation Rate
-  - 61 passing pytest unit, integration, & benchmark runner tests (`tests/`)
+- [x] **Phase 7A: Local LLM Provider Integration (Ollama)** (`src/mosaic/llm/ollama.py`, `src/mosaic/llm/factory.py`)
+  - Local HTTP-based Ollama provider (`OllamaProvider`) conforming to `BaseLLMProvider` using zero external framework dependencies (`urllib.request`).
+  - Provider Factory (`LLMProviderFactory`) for runtime resolution of `mock` and `ollama` providers.
+  - Preserved 100% offline default testing using `MockLLMProvider`.
+  - 69 passing unit/integration tests + 1 optional live Ollama skipped test (`tests/test_ollama_provider.py`).
+  - 69 passing pytest unit, integration, & benchmark runner tests (`tests/`)
 
 ---
 

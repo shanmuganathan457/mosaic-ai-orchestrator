@@ -1,7 +1,7 @@
 # MOSAIC Architecture & Technical Specifications
 
 **Multi-Intent Orchestration & State-Aware Intelligent Coordination**  
-*Version 0.7.0 — Phase 5C Structured Semantic Action Compilation Specifications*
+*Version 0.8.0 — Phase 7A Local LLM Provider Integration (Ollama) Specifications*
 
 ---
 
@@ -27,7 +27,7 @@ The architecture supports interchangeable intake strategies (`BaseIntentDecompos
                   │                                   │
                   ▼                                   ▼
     DeterministicIntentDecomposer           LLMIntentDecomposer
-    (Pattern-matching baseline)             (LLMProvider abstraction)
+    (Pattern-matching baseline)             (BaseLLMProvider: Mock / Ollama)
                   │                                   │
                   └─────────────────┬─────────────────┘
                                     │ [Integrity Checked: Enum + Evidence + Metadata]
