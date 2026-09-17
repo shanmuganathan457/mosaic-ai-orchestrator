@@ -50,6 +50,8 @@ class EvaluationSystemResult(BaseModel):
         default="CORRECT_ALL",
         description="Error attribution taxonomy category: CORRECT_ALL, INCORRECT_INTENT_EXTRACTION, INCORRECT_ACTION_COMPILATION, INCORRECT_VALIDATION_RESULT, INCORRECT_FINAL_INTERPRETATION."
     )
+    latency_ms: float = Field(default=0.0, description="Execution duration in milliseconds for this benchmark case.")
+    token_usage: Dict[str, Any] = Field(default_factory=dict, description="Token usage metadata (prompt_tokens, completion_tokens, total_tokens) if available.")
 
     model_config = ConfigDict(frozen=True)
 
@@ -69,6 +71,11 @@ class AggregateMetrics(BaseModel):
     escalation_precision: float
     false_escalation_rate: float
     error_attribution_counts: Dict[str, int] = Field(default_factory=dict)
+    mean_latency_ms: float = Field(default=0.0, description="Mean per-case latency in milliseconds.")
+    p95_latency_ms: float = Field(default=0.0, description="95th percentile per-case latency in milliseconds.")
+    total_prompt_tokens: Optional[int] = Field(default=None, description="Total LLM prompt tokens across dataset if available.")
+    total_completion_tokens: Optional[int] = Field(default=None, description="Total LLM completion tokens across dataset if available.")
+    total_tokens: Optional[int] = Field(default=None, description="Total LLM tokens across dataset if available.")
 
     model_config = ConfigDict(frozen=True)
 

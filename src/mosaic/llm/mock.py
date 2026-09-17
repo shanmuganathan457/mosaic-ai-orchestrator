@@ -49,11 +49,14 @@ class MockLLMProvider(BaseLLMProvider):
         if structured_output is not None and self.default_response_text == "Mock LLM response generated successfully.":
             content = json.dumps(structured_output)
 
+        usage_info = {"prompt_tokens": 10, "completion_tokens": 15, "total_tokens": 25}
+        self.record_usage(usage_info)
+
         return LLMResponse(
             content=content,
             structured_output=structured_output,
             provider_name=self.provider_name,
             model_name=self.model_name,
-            usage_info={"prompt_tokens": 10, "completion_tokens": 15, "total_tokens": 25},
+            usage_info=usage_info,
             finish_reason="stop",
         )

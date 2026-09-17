@@ -23,6 +23,23 @@ def compute_precision_recall_f1(predicted: Set[str], expected: Set[str]) -> Tupl
     return round(precision, 4), round(recall, 4), round(f1, 4)
 
 
+def _compute_p95(values: List[float]) -> float:
+    """Computes 95th percentile using linear interpolation."""
+    if not values:
+        return 0.0
+    sorted_v = sorted(values)
+    n = len(sorted_v)
+    if n == 1:
+        return sorted_v[0]
+    k = (n - 1) * 0.95
+    f = int(k)
+    c = f + 1
+    if c >= n:
+        return sorted_v[-1]
+    d = k - f
+    return sorted_v[f] + d * (sorted_v[c] - sorted_v[f])
+
+
 def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_cases: List[BenchmarkCase]) -> AggregateMetrics:
     """Computes overall aggregate metrics for a system across all benchmark cases."""
     total_cases = len(results)
@@ -38,6 +55,11 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
             conflict_f1=0.0,
             escalation_precision=0.0,
             false_escalation_rate=0.0,
+            mean_latency_ms=0.0,
+            p95_latency_ms=0.0,
+            total_prompt_tokens=None,
+            total_completion_tokens=None,
+            total_tokens=None,
         )
 
     # Verdict Accuracy
@@ -120,6 +142,22 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
         cat = r.error_category
         error_counts[cat] = error_counts.get(cat, 0) + 1
 
+    # Latency Aggregation
+    latencies = [r.latency_ms for r in results]
+    mean_latency_ms = round(sum(latencies) / total_cases, 2)
+    p95_latency_ms = round(_compute_p95(latencies), 2)
+
+    # Token Usage Aggregation
+    results_with_tokens = [r for r in results if r.token_usage and "total_tokens" in r.token_usage]
+    if results_with_tokens:
+        total_prompt_tokens: Optional[int] = sum(r.token_usage.get("prompt_tokens", 0) for r in results_with_tokens)
+        total_completion_tokens: Optional[int] = sum(r.token_usage.get("completion_tokens", 0) for r in results_with_tokens)
+        total_tokens: Optional[int] = sum(r.token_usage.get("total_tokens", 0) for r in results_with_tokens)
+    else:
+        total_prompt_tokens = None
+        total_completion_tokens = None
+        total_tokens = None
+
     return AggregateMetrics(
         total_cases=total_cases,
         verdict_accuracy=verdict_accuracy,
@@ -134,4 +172,9 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
         escalation_precision=escalation_precision,
         false_escalation_rate=false_escalation_rate,
         error_attribution_counts=error_counts,
+        mean_latency_ms=mean_latency_ms,
+        p95_latency_ms=p95_latency_ms,
+        total_prompt_tokens=total_prompt_tokens,
+        total_completion_tokens=total_completion_tokens,
+        total_tokens=total_tokens,
     )

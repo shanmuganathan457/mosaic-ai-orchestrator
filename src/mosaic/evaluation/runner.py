@@ -55,6 +55,11 @@ class EvaluationRateLimitedProvider(BaseLLMProvider):
     def model_name(self) -> str:
         return self.provider.model_name
 
+    def pop_recorded_usage(self) -> Dict[str, Any]:
+        if hasattr(self.provider, "pop_recorded_usage"):
+            return self.provider.pop_recorded_usage()
+        return {}
+
     def generate(self, request: LLMRequest) -> LLMResponse:
         """Throttles generate requests ensuring min_interval_seconds between calls, retrying transient 503 errors."""
         attempt = 0

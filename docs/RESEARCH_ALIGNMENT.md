@@ -58,9 +58,11 @@ Research requirement: The LLM may propose candidate intents or actions, but **mu
 - [x] Root Cause Error Attribution Taxonomy Evaluator (`mosaic.evaluation.error_attribution`)
 - [x] Research Baseline Implementations (`BaselineASingleIntentSystem`, `BaselineBDirectMultiAgentSystem`)
 - [x] Evaluation Harness Runner, CLI & Metrics (`EvaluationRunner`, `compute_aggregate_metrics`)
+- [x] Empirical Latency & Token Usage Tracking (`EvaluationSystemResult.latency_ms`, `AggregateMetrics.mean_latency_ms`, `AggregateMetrics.p95_latency_ms`, `token_usage`)
 - [x] Strategy-Injectable Pipeline Orchestrator (`MosaicOrchestrator`)
-- [x] 81 passing pytest unit, integration, & benchmark runner tests (`tests/`)
+- [x] 93 passing pytest unit, integration, & benchmark runner tests (`tests/`)
 
 ### Intentionally NOT Yet Implemented
 - [ ] Response Synthesis & Real System Execution (Phase 8)
 - [ ] Frontend Dashboard / UI
+

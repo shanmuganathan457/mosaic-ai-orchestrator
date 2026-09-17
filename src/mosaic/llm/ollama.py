@@ -138,6 +138,7 @@ class OllamaProvider(BaseLLMProvider):
             "total_tokens": prompt_eval_count + eval_count,
             "total_duration": resp_json.get("total_duration"),
         }
+        self.record_usage(usage_info)
 
         return LLMResponse(
             content=raw_content,

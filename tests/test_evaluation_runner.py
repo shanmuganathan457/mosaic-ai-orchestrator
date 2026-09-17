@@ -19,9 +19,20 @@ def test_evaluation_runner_execution():
 
     assert report.dataset_version == "v1"
     assert report.total_cases == 23
+    assert report.provider_name == "mock"
+    assert report.model_name == "mock-deterministic-v1"
     assert "baseline_a_single_intent" in report.systems
     assert "baseline_b_direct_multi_agent" in report.systems
     assert "mosaic_validated" in report.systems
+
+    # Verify per-case latency measurement
+    for res in report.per_case_results:
+        assert res.latency_ms >= 0.0
+
+    # Verify aggregate latency metrics
+    for sys_metrics in report.systems.values():
+        assert sys_metrics.mean_latency_ms >= 0.0
+        assert sys_metrics.p95_latency_ms >= 0.0
 
     # Verify MOSAIC achieves higher verdict accuracy than baselines on the benchmark
     assert report.systems["mosaic_validated"].verdict_accuracy > report.systems["baseline_a_single_intent"].verdict_accuracy
@@ -38,7 +49,10 @@ def test_evaluation_runner_execution():
         with open(out_file, "r", encoding="utf-8") as f:
             data = json.load(f)
         assert data["total_cases"] == 23
+        assert data["provider_name"] == "mock"
+        assert data["model_name"] == "mock-deterministic-v1"
         assert "systems" in data
     finally:
         if out_file.exists():
             out_file.unlink()
+

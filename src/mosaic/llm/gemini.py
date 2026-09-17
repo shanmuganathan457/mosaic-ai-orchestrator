@@ -136,6 +136,7 @@ class GeminiProvider(BaseLLMProvider):
             }
 
         finish_reason = "stop"
+        self.record_usage(usage_info)
 
         return LLMResponse(
             content=raw_content,

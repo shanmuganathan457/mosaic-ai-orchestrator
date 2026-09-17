@@ -1,7 +1,6 @@
-"""Research Baseline Systems (Baseline A, Baseline B, and MOSAIC)."""
-
+import time
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from uuid import UUID
 
 from mosaic.agents import (
@@ -22,7 +21,27 @@ from mosaic.domain.models import (
 from mosaic.evaluation.models import BenchmarkCase, EvaluationSystemResult
 from mosaic.evaluation.metrics import compute_precision_recall_f1
 from mosaic.intake.decomposer import BaseIntentDecomposer, IntentDecompositionEngine
+from mosaic.llm.base import BaseLLMProvider
 from mosaic.orchestrator import MosaicOrchestrator
+
+
+def _collect_token_usage(*providers: Optional[Any]) -> Dict[str, Any]:
+    """Flushes and aggregates token usage metadata across all LLM providers used during a case execution."""
+    unique_providers = {p for p in providers if p is not None}
+    combined_usage: Dict[str, int] = {}
+    has_valid_usage = False
+
+    for provider in unique_providers:
+        if hasattr(provider, "pop_recorded_usage"):
+            usage = provider.pop_recorded_usage()
+            if usage and "total_tokens" in usage:
+                has_valid_usage = True
+                combined_usage["prompt_tokens"] = combined_usage.get("prompt_tokens", 0) + usage.get("prompt_tokens", 0)
+                combined_usage["completion_tokens"] = combined_usage.get("completion_tokens", 0) + usage.get("completion_tokens", 0)
+                combined_usage["total_tokens"] = combined_usage.get("total_tokens", 0) + usage.get("total_tokens", 0)
+
+    return combined_usage if has_valid_usage else {}
+
 
 
 class BaseResearchSystem(ABC):
@@ -67,6 +86,13 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
         return "baseline_a_single_intent"
 
     def evaluate_case(self, case: BenchmarkCase) -> EvaluationSystemResult:
+        providers = [
+            getattr(self.intake_engine, "llm_provider", None),
+            getattr(self.compiler, "llm_provider", None),
+        ]
+        _collect_token_usage(*providers)
+        start_time = time.perf_counter()
+
         case_obj, subtask_mappings = self.intake_engine.create_case_from_intake(
             customer_id="bench_user",
             raw_message=case.customer_message,
@@ -118,6 +144,9 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
             expected_verdict=case.expected_final_verdict,
         )
 
+        elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+        token_usage = _collect_token_usage(*providers)
+
         return EvaluationSystemResult(
             case_id=case.case_id,
             source_case_id=case.source_case_id,
@@ -139,6 +168,8 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
             conflict_f1=f1,
             execution_outcome="DIRECT_SINGLE_ACTION_EXECUTION" if predicted_actions else "NO_INTENT_DETECTED",
             error_category=err_cat,
+            latency_ms=round(elapsed_ms, 2),
+            token_usage=token_usage,
         )
 
 
@@ -169,6 +200,13 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
         return "baseline_b_direct_multi_agent"
 
     def evaluate_case(self, case: BenchmarkCase) -> EvaluationSystemResult:
+        providers = [
+            getattr(self.intake_engine, "llm_provider", None),
+            getattr(self.compiler, "llm_provider", None),
+        ]
+        _collect_token_usage(*providers)
+        start_time = time.perf_counter()
+
         case_obj, subtask_mappings = self.intake_engine.create_case_from_intake(
             customer_id="bench_user",
             raw_message=case.customer_message,
@@ -217,6 +255,9 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
             expected_verdict=case.expected_final_verdict,
         )
 
+        elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+        token_usage = _collect_token_usage(*providers)
+
         return EvaluationSystemResult(
             case_id=case.case_id,
             source_case_id=case.source_case_id,
@@ -238,6 +279,8 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
             conflict_f1=f1,
             execution_outcome="DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS" if predicted_actions else "NO_INTENT_DETECTED",
             error_category=err_cat,
+            latency_ms=round(elapsed_ms, 2),
+            token_usage=token_usage,
         )
 
 
@@ -260,6 +303,13 @@ class MosaicResearchSystem(BaseResearchSystem):
 
     def evaluate_case(self, case: BenchmarkCase) -> EvaluationSystemResult:
         from mosaic.domain.models import PolicyRule
+
+        providers = [
+            getattr(self.orchestrator.intake_engine, "llm_provider", None),
+            getattr(getattr(self.orchestrator, "compiler", None), "llm_provider", None),
+        ]
+        _collect_token_usage(*providers)
+        start_time = time.perf_counter()
 
         # Define evaluation policies for security/compliance flags
         eval_policies = [
@@ -345,6 +395,9 @@ class MosaicResearchSystem(BaseResearchSystem):
             expected_verdict=case.expected_final_verdict,
         )
 
+        elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+        token_usage = _collect_token_usage(*providers)
+
         return EvaluationSystemResult(
             case_id=case.case_id,
             source_case_id=case.source_case_id,
@@ -366,4 +419,6 @@ class MosaicResearchSystem(BaseResearchSystem):
             conflict_f1=f1,
             execution_outcome=f"MOSAIC_VALIDATED_VERDICT_{validation_result.verdict.value}",
             error_category=err_cat,
+            latency_ms=round(elapsed_ms, 2),
+            token_usage=token_usage,
         )
