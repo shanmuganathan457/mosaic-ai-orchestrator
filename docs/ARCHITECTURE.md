@@ -76,10 +76,41 @@ The architecture supports interchangeable intake strategies (`BaseIntentDecompos
 
 ---
 
-## 3. Technology Stack Decisions
+## 3. Evaluation Architecture & Research Harness (Phase 6)
+
+Phase 6 establishes the controlled experimental framework required to evaluate whether state-aware validation improves consistency and safety in multi-intent orchestration.
+
+```
+                              Benchmark Dataset (v1/cases.json)
+                                              │
+                      ┌───────────────────────┼───────────────────────┐
+                      ▼                       ▼                       ▼
+                 Baseline A              Baseline B                 MOSAIC
+           (Single-Intent Route)    (Direct Synthesis)       (State Validation)
+                      │                       │                       │
+                      ▼                       ▼                       ▼
+            Single Action Execution    Unvalidated Multi-Action     ALLOW/BLOCK/ESCALATE
+                      │                       │                       │
+                      └───────────────────────┼───────────────────────┘
+                                              │
+                                              ▼
+                                   EvaluationRunner & Metrics
+                             (Accuracy, Precision, Recall, F1, Report)
+```
+
+### Research Baselines & System Metrics
+1. **Baseline A (`BaselineASingleIntentSystem`):** Routes inquiries strictly to a single specialist agent for the primary intent, ignoring compound multi-intents and state validation.
+2. **Baseline B (`BaselineBDirectMultiAgentSystem`):** Decomposes multi-intents and executes all specialist agents, but directly ALLOWs all proposed actions without cross-action state validation.
+3. **MOSAIC (`MosaicResearchSystem`):** Full state-aware architecture evaluating compiled actions through the deterministic `DefaultValidationEngine`.
+4. **Metrics:** Calculated objectively against ground truth using `verdict_accuracy`, `conflict_precision`, `conflict_recall`, `conflict_f1`, `escalation_precision`, and `false_escalation_rate`.
+
+---
+
+## 4. Technology Stack Decisions
 
 - **Language:** Python 3.12+ (type safety, modern Pydantic v2 support, performance).
 - **Web Framework:** FastAPI (async endpoints, OpenAPI spec integration, fast execution).
 - **Data Validation & Schemas:** Pydantic v2 (strict validation, fast serialization).
 - **LLM Abstraction Layer:** Custom provider-agnostic Pydantic/ABC boundary (`mosaic.llm`).
-- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, intake strategies, LLM abstraction, and validation engine.
+- **Evaluation Engine:** Dedicated evaluation package (`mosaic.evaluation`) with dataset versioning (`tests/fixtures/research_dataset/v1/`).
+- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, intake strategies, LLM abstraction, validation engine, and evaluation harness.

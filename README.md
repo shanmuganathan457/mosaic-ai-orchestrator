@@ -41,12 +41,13 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 - [x] **Phase 5A: Provider-Agnostic LLM Abstraction Layer & Deterministic Mock LLM** (`src/mosaic/llm/`)
 - [x] **Phase 5B: LLM-Backed Intent Decomposition Engine & Output Integrity Correction** (`src/mosaic/intake/llm_decomposer.py`)
 - [x] **Phase 5C: Structured Semantic Action Compilation** (`src/mosaic/compiler/llm_compiler.py`)
-  - Abstract Compiler Strategy: `BaseActionCompiler` (`state_compiler.py`)
-  - Deterministic Baseline: `SemanticStateCompiler` preserved as research baseline
-  - LLM Compiler: `LLMActionCompiler` using provider-agnostic `BaseLLMProvider`
-  - Strongly-Typed Boundary Schema: `ExtractedActionPayload` with strict error handling (`SemanticCompilerError`)
-  - Traceability: `proposal_id` preserved across AgentProposal -> Action transformation
-  - 51 passing pytest unit, integration, & cross-action pipeline tests (`tests/`)
+- [x] **Phase 6: Research Dataset & Evaluation Harness** (`src/mosaic/evaluation/`, `tests/fixtures/research_dataset/v1/`)
+  - Ground truth benchmark schema: `BenchmarkCase`, `EvaluationSystemResult`, `AggregateMetrics`
+  - Synthetic dataset v1: 20 controlled scenarios covering missing preconditions, failed dependencies, cross-action postcondition conflicts, and state-dependent execution
+  - Baselines: Baseline A (Single-Intent Route), Baseline B (Direct Multi-Agent Synthesis without Validation), MOSAIC (State Validation)
+  - Reusable evaluation harness: `EvaluationRunner` producing machine-readable `evaluation_results.json` reports
+  - Objective research metrics: Verdict Accuracy, Conflict Precision/Recall/F1, Escalation Precision, False Escalation Rate
+  - 61 passing pytest unit, integration, & benchmark runner tests (`tests/`)
 
 ---
 

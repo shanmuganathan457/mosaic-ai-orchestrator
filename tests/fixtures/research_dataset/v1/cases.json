@@ -1,0 +1,389 @@
+[
+  {
+    "case_id": "case_001",
+    "category": "no_conflict_multi_intent",
+    "customer_message": "Please refund my payment pay_101 and cancel my subscription sub_202.",
+    "expected_intents": ["refund_payment", "cancel_subscription"],
+    "expected_intent_evidence": {
+      "refund_payment": "refund",
+      "cancel_subscription": "cancel my subscription"
+    },
+    "initial_facts": {
+      "payment_verified": true,
+      "identity_verified": true,
+      "subscription_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["refund_payment", "cancel_subscription"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Refund and subscription cancellation are both valid and have all preconditions satisfied with no state collision."
+  },
+  {
+    "case_id": "case_002",
+    "category": "missing_precondition",
+    "customer_message": "Please refund my payment pay_101 right away.",
+    "expected_intents": ["refund_payment"],
+    "expected_intent_evidence": {
+      "refund_payment": "refund"
+    },
+    "initial_facts": {
+      "payment_verified": false,
+      "identity_verified": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["refund_payment"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["PRECONDITION_UNSATISFIED"],
+    "expected_escalation_reason": "Precondition payment_verified is false.",
+    "rationale": "Financial refund action requires payment_verified=true in case state."
+  },
+  {
+    "case_id": "case_003",
+    "category": "cross_action_conflict",
+    "customer_message": "My account acc_999 was hacked, please restore access right now.",
+    "expected_intents": ["restrict_account", "restore_login_access"],
+    "expected_intent_evidence": {
+      "restrict_account": "hacked",
+      "restore_login_access": "restore access"
+    },
+    "initial_facts": {
+      "account_status": "active",
+      "identity_verified": true,
+      "fraud_alert_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restrict_account", "restore_login_access"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["MUTUALLY_EXCLUSIVE_POSTCONDITION"],
+    "expected_escalation_reason": "Conflicting target postconditions for account_status (restricted vs active).",
+    "rationale": "Security agent proposes restricting account status while access agent proposes setting it to active."
+  },
+  {
+    "case_id": "case_004",
+    "category": "failed_dependency",
+    "customer_message": "Please restore login access for account acc_333.",
+    "expected_intents": ["restore_login_access"],
+    "expected_intent_evidence": {
+      "restore_login_access": "restore login access"
+    },
+    "initial_facts": {
+      "account_status": "locked",
+      "identity_verified": false
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restore_login_access"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["PRECONDITION_UNSATISFIED"],
+    "expected_escalation_reason": "Identity verification precondition failed.",
+    "rationale": "Access restoration requires prior identity verification completion."
+  },
+  {
+    "case_id": "case_005",
+    "category": "independent_valid",
+    "customer_message": "I would like to cancel my subscription sub_555.",
+    "expected_intents": ["cancel_subscription"],
+    "expected_intent_evidence": {
+      "cancel_subscription": "cancel my subscription"
+    },
+    "initial_facts": {
+      "subscription_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["cancel_subscription"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Single subscription cancellation intent with active subscription fact satisfied."
+  },
+  {
+    "case_id": "case_006",
+    "category": "insufficient_info_escalate",
+    "customer_message": "I think there is suspicious activity on my account acc_777.",
+    "expected_intents": ["restrict_account"],
+    "expected_intent_evidence": {
+      "restrict_account": "suspicious activity"
+    },
+    "initial_facts": {
+      "fraud_alert_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restrict_account"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Security restriction with active fraud alert flag in initial facts."
+  },
+  {
+    "case_id": "case_007",
+    "category": "state_dependent_valid",
+    "customer_message": "Please process refund for pay_777.",
+    "expected_intents": ["refund_payment"],
+    "expected_intent_evidence": {
+      "refund_payment": "refund"
+    },
+    "initial_facts": {
+      "payment_verified": true,
+      "identity_verified": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["refund_payment"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "All required financial preconditions are met in initial facts."
+  },
+  {
+    "case_id": "case_008",
+    "category": "state_dependent_invalid",
+    "customer_message": "Please process refund for pay_777.",
+    "expected_intents": ["refund_payment"],
+    "expected_intent_evidence": {
+      "refund_payment": "refund"
+    },
+    "initial_facts": {
+      "payment_verified": true,
+      "identity_verified": false
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["refund_payment"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["PRECONDITION_UNSATISFIED"],
+    "expected_escalation_reason": "identity_verified is false.",
+    "rationale": "Refund action requires identity_verified=true."
+  },
+  {
+    "case_id": "case_009",
+    "category": "cross_action_conflict",
+    "customer_message": "Someone compromised acc_100, so please reset password and restore login access.",
+    "expected_intents": ["restrict_account", "restore_login_access"],
+    "expected_intent_evidence": {
+      "restrict_account": "compromised",
+      "restore_login_access": "restore login access"
+    },
+    "initial_facts": {
+      "account_status": "active",
+      "identity_verified": true,
+      "fraud_alert_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restrict_account", "restore_login_access"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["MUTUALLY_EXCLUSIVE_POSTCONDITION"],
+    "expected_escalation_reason": "Postcondition conflict between restricting account and activating account.",
+    "rationale": "Security agent sets account status restricted; Access agent sets account status active."
+  },
+  {
+    "case_id": "case_010",
+    "category": "no_conflict_multi_intent",
+    "customer_message": "Can I cancel my subscription sub_999 and also check why I cannot log in for acc_999?",
+    "expected_intents": ["cancel_subscription", "restore_login_access"],
+    "expected_intent_evidence": {
+      "cancel_subscription": "cancel my subscription",
+      "restore_login_access": "cannot log in"
+    },
+    "initial_facts": {
+      "subscription_active": true,
+      "identity_verified": true,
+      "account_status": "locked"
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["cancel_subscription", "restore_login_access"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Subscription cancellation and access restoration operate on non-conflicting domains."
+  },
+  {
+    "case_id": "case_011",
+    "category": "missing_precondition",
+    "customer_message": "Stop my subscription sub_111 right now.",
+    "expected_intents": ["cancel_subscription"],
+    "expected_intent_evidence": {
+      "cancel_subscription": "Stop my subscription"
+    },
+    "initial_facts": {
+      "subscription_active": false
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["cancel_subscription"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["PRECONDITION_UNSATISFIED"],
+    "expected_escalation_reason": "subscription_active is false.",
+    "rationale": "Cannot cancel a subscription that is not currently active."
+  },
+  {
+    "case_id": "case_012",
+    "category": "independent_valid",
+    "customer_message": "I was wrongly charged, please issue a refund for pay_123.",
+    "expected_intents": ["refund_payment"],
+    "expected_intent_evidence": {
+      "refund_payment": "wrongly charged"
+    },
+    "initial_facts": {
+      "payment_verified": true,
+      "identity_verified": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["refund_payment"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Refund request with verified identity and verified payment."
+  },
+  {
+    "case_id": "case_013",
+    "category": "failed_dependency",
+    "customer_message": "I am locked out of acc_888, please restore access.",
+    "expected_intents": ["restore_login_access"],
+    "expected_intent_evidence": {
+      "restore_login_access": "locked out"
+    },
+    "initial_facts": {
+      "identity_verified": false
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restore_login_access"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["PRECONDITION_UNSATISFIED"],
+    "expected_escalation_reason": "Identity verification dependency failed.",
+    "rationale": "Restoring login access requires verified identity."
+  },
+  {
+    "case_id": "case_014",
+    "category": "cross_action_conflict",
+    "customer_message": "Security breach detected on acc_404, but restore access immediately.",
+    "expected_intents": ["restrict_account", "restore_login_access"],
+    "expected_intent_evidence": {
+      "restrict_account": "Security breach",
+      "restore_login_access": "restore access"
+    },
+    "initial_facts": {
+      "identity_verified": true,
+      "fraud_alert_active": true,
+      "account_status": "active"
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restrict_account", "restore_login_access"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["MUTUALLY_EXCLUSIVE_POSTCONDITION"],
+    "expected_escalation_reason": "Conflicting postconditions on account status.",
+    "rationale": "Conflicting actions proposed simultaneously for security breach and access restoration."
+  },
+  {
+    "case_id": "case_015",
+    "category": "no_conflict_multi_intent",
+    "customer_message": "Please reimburse pay_303 and end my membership sub_303.",
+    "expected_intents": ["refund_payment", "cancel_subscription"],
+    "expected_intent_evidence": {
+      "refund_payment": "reimburse",
+      "cancel_subscription": "end my membership"
+    },
+    "initial_facts": {
+      "payment_verified": true,
+      "identity_verified": true,
+      "subscription_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["refund_payment", "cancel_subscription"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Multi-intent financial reimbursement and subscription termination with all state facts satisfied."
+  },
+  {
+    "case_id": "case_016",
+    "category": "state_dependent_valid",
+    "customer_message": "Please end my subscription sub_606.",
+    "expected_intents": ["cancel_subscription"],
+    "expected_intent_evidence": {
+      "cancel_subscription": "end my subscription"
+    },
+    "initial_facts": {
+      "subscription_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["cancel_subscription"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Subscription state is active."
+  },
+  {
+    "case_id": "case_017",
+    "category": "state_dependent_invalid",
+    "customer_message": "Please end my subscription sub_606.",
+    "expected_intents": ["cancel_subscription"],
+    "expected_intent_evidence": {
+      "cancel_subscription": "end my subscription"
+    },
+    "initial_facts": {
+      "subscription_active": false
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["cancel_subscription"],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["PRECONDITION_UNSATISFIED"],
+    "expected_escalation_reason": "Subscription is not active.",
+    "rationale": "State facts indicate subscription is already inactive."
+  },
+  {
+    "case_id": "case_018",
+    "category": "insufficient_info_escalate",
+    "customer_message": "My account acc_909 was compromised!",
+    "expected_intents": ["restrict_account"],
+    "expected_intent_evidence": {
+      "restrict_account": "compromised"
+    },
+    "initial_facts": {
+      "fraud_alert_active": true
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restrict_account"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Security restriction with fraud alert active."
+  },
+  {
+    "case_id": "case_019",
+    "category": "no_conflict_multi_intent",
+    "customer_message": "I was wrongly charged for pay_999 and I also cannot log in for acc_999.",
+    "expected_intents": ["refund_payment", "restore_login_access"],
+    "expected_intent_evidence": {
+      "refund_payment": "wrongly charged",
+      "restore_login_access": "cannot log in"
+    },
+    "initial_facts": {
+      "payment_verified": true,
+      "identity_verified": true,
+      "account_status": "locked"
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["refund_payment", "restore_login_access"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Refund and login restoration across separate state variables with all preconditions met."
+  },
+  {
+    "case_id": "case_020",
+    "category": "independent_valid",
+    "customer_message": "Please reset password and restore access for acc_202.",
+    "expected_intents": ["restore_login_access"],
+    "expected_intent_evidence": {
+      "restore_login_access": "restore access"
+    },
+    "initial_facts": {
+      "identity_verified": true,
+      "account_status": "locked"
+    },
+    "active_flags": [],
+    "expected_agent_actions": ["restore_login_access"],
+    "expected_final_verdict": "ALLOW",
+    "expected_conflicts": [],
+    "expected_escalation_reason": null,
+    "rationale": "Single access restoration request with verified identity."
+  }
+]

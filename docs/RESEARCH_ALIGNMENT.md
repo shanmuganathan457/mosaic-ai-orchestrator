@@ -51,10 +51,13 @@ Research requirement: The LLM may propose candidate intents or actions, but **mu
 - [x] LLM-Backed Intent & Evidence Decomposition Engine (`mosaic.intake.llm_decomposer`)
 - [x] Abstract Action Compiler Strategy (`BaseActionCompiler`)
 - [x] LLM-Backed Structured Semantic Action Compiler (`LLMActionCompiler`)
+- [x] Controlled Research Benchmark Dataset v1 (`tests/fixtures/research_dataset/v1/cases.json`)
+- [x] Research Baseline Implementations (`BaselineASingleIntentSystem`, `BaselineBDirectMultiAgentSystem`)
+- [x] Evaluation Harness Runner & Metrics (`EvaluationRunner`, `compute_aggregate_metrics`)
 - [x] Strategy-Injectable Pipeline Orchestrator (`MosaicOrchestrator`)
-- [x] 51 passing pytest unit & end-to-end pipeline tests (`tests/`)
+- [x] 61 passing pytest unit, integration, & evaluation benchmark tests (`tests/`)
 
 ### Intentionally NOT Yet Implemented
-- [ ] LLM -> MOSAIC Pipeline Integration with Live Providers (Phase 5D)
-- [ ] Fallback Strategy Engine (Phase 5E)
+- [ ] Live LLM Providers with Ollama / OpenAI SDK (Phase 7)
+- [ ] Response Synthesis & Real System Execution (Phase 8)
 - [ ] Frontend Dashboard / UI
