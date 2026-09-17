@@ -1,7 +1,7 @@
 # MOSAIC Architecture & Technical Specifications
 
 **Multi-Intent Orchestration & State-Aware Intelligent Coordination**  
-*Version 0.4.0 — Phase 4 Architecture & Intent Decomposition Specifications*
+*Version 0.5.0 — Phase 5A Architecture & LLM Abstraction Specifications*
 
 ---
 
@@ -14,73 +14,62 @@ Modern AI customer service pipelines commonly use multi-intent decomposition, RA
 
 MOSAIC introduces a **deterministic, inspectable, state-dependent Validation Engine** that compiles agent proposals into structured actions, checks preconditions, postconditions, workflow dependencies, and business policies, and outputs a validated verdict (`ALLOW`, `BLOCK`, or `ESCALATE`) **prior to response synthesis or side-effect execution**.
 
-### 1.2 Baseline Capabilities vs. Research Scope
-- **Baseline Capabilities (Non-novel / Existing):** Multi-intent extraction, ticket routing, RAG grounding, basic multi-agent orchestration, static keyword/pairwise contradiction detection.
-- **MOSAIC Research Contribution:** State/dependency-aware semantic validation layer evaluating cross-agent business actions against dynamic case state and workflow policy constraints without relying on non-deterministic LLM calls during validation.
-
 ---
 
-## 2. System Architecture & Component Boundaries
+## 2. System Architecture & LLM Abstraction Boundary
 
-The system follows strict separation of concerns between raw intake perception, domain agent proposals, semantic state compilation, and validation logic.
+The system maintains strict decoupling between non-deterministic LLM perception/generation models and deterministic validation logic.
 
 ```
-Incoming Customer Communication (Raw Case Message)
-                    │
-                    ▼
-    ┌───────────────────────────────┐
-    │ 1. Intent Decomposition Engine│  <-- "Extract IntentSpans & Create SubTasks"
-    │    (mosaic.intake)            │
-    └───────────────┬───────────────┘
-                    │ (Canonical Case + SubTasks)
-                    ▼
-    ┌─────────────────────────────────┐
-    │ 2. Specialized Mock AI Agents   │
-    │ (Security, Billing, Sub, Access)│  <-- "What do I propose?"
-    └───────────────┬─────────────────┘
-                    │ (Unvalidated AgentProposals)
-                    ▼
-   ┌─────────────────────────────────┐
-   │ 3. Semantic State Compiler      │
-   │    (Translates proposals into   │  <-- "What structured action does this represent?"
-   │     strongly typed Actions)     │
-   └────────────────┬────────────────┘
-                    │ (Structured Action Primitives)
-                    ▼
-══════════════════════════════════════════════════════════════
-    DETERMINISTIC VALIDATION ENGINE (NO LLM REQUIRED)
-    <-- "Is that action safe/valid in the current state?"
-══════════════════════════════════════════════════════════════
-                    │
-                    ├─► Precondition Evaluation
-                    ├─► State & Dependency Verification
-                    ├─► Policy Rule & Constraint Check
-                    └─► Cross-Action Conflict Detection
-                    │
-                    ▼
-     ┌─────────────────────────────┐
-     │ 4. Validation Outcome       │
-     │    (ALLOW / BLOCK / ESCALATE)│
-     └──────────────┬──────────────┘
-                    │
-          ┌─────────┴─────────┐
-          ▼                   ▼
-    [ ALLOW ]          [ BLOCK / ESCALATE ]
-          │                   │
-          ▼                   ▼
-┌──────────────────┐  ┌──────────────────────┐
-│ 5. Response Synth│  │ 6. Human Escalation  │
-│    & Execution   │  │    & Audit Logging   │
-└──────────────────┘  └──────────────────────┘
+                  Customer Email / Raw Message
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   LLM Provider      │
+                    │ (Mock / Ollama /    │
+                    │  Gemini / OpenAI)   │
+                    └──────────┬──────────┘
+                               │ (LLMRequest / LLMResponse)
+                               ▼
+                    ┌─────────────────────┐
+                    │ LLM Abstraction     │
+                    │ (BaseLLMProvider)   │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                         IntentSpan[]
+                               │
+                               ▼
+                          SubTask[]
+                               │
+                               ▼
+                         Domain Agents
+                               │
+                               ▼
+                      Semantic Compiler
+                               │
+                               ▼
+                           Action[]
+                               │
+                               ▼
+             ═════════════════════════════════════
+                 MOSAIC VALIDATION ENGINE
+                 (100% DETERMINISTIC, NO LLM)
+             ═════════════════════════════════════
+                               │
+                       ┌───────┼───────┐
+                       ▼       ▼       ▼
+                     ALLOW   BLOCK  ESCALATE
 ```
 
-### Component Responsibilities & Separation Boundaries
+### Component Responsibilities & LLM Isolation
 
-1. **Intent Decomposition Engine (`mosaic.intake`):** Rule-based, deterministic intent extractor parsing raw customer messages into non-overlapping `IntentSpan` objects and creating assigned `SubTask` records.
-2. **Specialized Mock Domain Agents (`mosaic.agents`):** Domain-specific worker agents (Security, Billing, Subscription, Access) that produce unvalidated candidate `AgentProposal` payloads based on assigned subtasks.
-3. **Semantic State Compiler (`mosaic.compiler`):** Formats natural language / semi-structured proposals into strongly-typed `Action` primitives with explicit preconditions, postconditions, dependencies, and risk levels. **Crucially, the compiler performs zero validation decision making.**
-4. **Deterministic Validation Engine (`mosaic.validation`):** Evaluates structured actions against the current `CaseState`, active `Dependency` graphs, and system `PolicyRule`s strictly deterministically. Returns a `ValidationResult` (`ALLOW`, `BLOCK`, `ESCALATE`) along with explicit diagnostic `Conflict` items.
-5. **Mosaic Orchestrator (`mosaic.orchestrator`):** Pipeline manager coordinating end-to-end flow from Raw Intake to Final Validation Verdict.
+1. **LLM Abstraction Interface (`mosaic.llm`):** Abstract provider interface (`BaseLLMProvider`), request payload (`LLMRequest`), response container (`LLMResponse`), and exception definitions. Decouples MOSAIC from specific LLM provider SDKs (OpenAI, Gemini, Ollama, LiteLLM).
+2. **Mock LLM Provider (`MockLLMProvider`):** 100% offline, deterministic implementation of `BaseLLMProvider` for research experiments and unit testing without network or GPU dependencies.
+3. **Intent Decomposition Engine (`mosaic.intake`):** Rule-based or LLM-backed intent extractor parsing raw customer messages into non-overlapping `IntentSpan` objects and creating assigned `SubTask` records.
+4. **Specialized Domain Agents (`mosaic.agents`):** Domain-specific worker agents (Security, Billing, Subscription, Access) producing unvalidated candidate `AgentProposal` payloads.
+5. **Semantic State Compiler (`mosaic.compiler`):** Formats natural language / semi-structured proposals into strongly-typed `Action` primitives. Performs zero validation decision making.
+6. **Deterministic Validation Engine (`mosaic.validation`):** Evaluates structured actions against current `CaseState`, `Dependency` graphs, and `PolicyRule`s strictly deterministically **without invoking an LLM**.
 
 ---
 
@@ -89,4 +78,5 @@ Incoming Customer Communication (Raw Case Message)
 - **Language:** Python 3.12+ (type safety, modern Pydantic v2 support, performance).
 - **Web Framework:** FastAPI (async endpoints, OpenAPI spec integration, fast execution).
 - **Data Validation & Schemas:** Pydantic v2 (strict validation, fast serialization).
-- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, intake engine, and validation engine.
+- **LLM Abstraction Layer:** Custom provider-agnostic Pydantic/ABC boundary (`mosaic.llm`).
+- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, intake engine, LLM abstraction, and validation engine.

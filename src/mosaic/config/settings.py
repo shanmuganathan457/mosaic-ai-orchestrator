@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite:///./mosaic_dev.db"
     
+    # LLM Settings (Default to mock for 100% offline execution)
+    LLM_PROVIDER: str = "mock"
+    LLM_MODEL: str = "mock-deterministic-v1"
+    LLM_TIMEOUT: float = 30.0
+    LLM_ENABLED: bool = False
+    
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
