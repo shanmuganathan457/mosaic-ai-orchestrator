@@ -1,0 +1,65 @@
+{
+  "provider_name": "mock",
+  "model_name": "mock-deterministic-v1",
+  "dataset_version": "v1_natural_language",
+  "total_cases": 39,
+  "systems": {
+    "baseline_a_single_intent": {
+      "total_cases": 39,
+      "verdict_accuracy": 0.3077,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5294,
+      "intent_f1": 0.6923,
+      "action_coverage": 0.5294,
+      "unexpected_action_rate": 0.0,
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "escalation_precision": 0.25,
+      "false_escalation_rate": 0.3,
+      "error_attribution_counts": {
+        "INCORRECT_INTENT_EXTRACTION": 22,
+        "INCORRECT_VALIDATION_RESULT": 13,
+        "CORRECT_ALL": 4
+      }
+    },
+    "baseline_b_direct_multi_agent": {
+      "total_cases": 39,
+      "verdict_accuracy": 0.3077,
+      "intent_precision": 1.0,
+      "intent_recall": 0.6863,
+      "intent_f1": 0.814,
+      "action_coverage": 0.6863,
+      "unexpected_action_rate": 0.0,
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "escalation_precision": 0.25,
+      "false_escalation_rate": 0.3,
+      "error_attribution_counts": {
+        "INCORRECT_INTENT_EXTRACTION": 14,
+        "CORRECT_ALL": 7,
+        "INCORRECT_VALIDATION_RESULT": 18
+      }
+    },
+    "mosaic_validated": {
+      "total_cases": 39,
+      "verdict_accuracy": 0.7692,
+      "intent_precision": 1.0,
+      "intent_recall": 0.6863,
+      "intent_f1": 0.814,
+      "action_coverage": 0.6863,
+      "unexpected_action_rate": 0.0,
+      "conflict_precision": 0.3611,
+      "conflict_recall": 0.5417,
+      "conflict_f1": 0.4333,
+      "escalation_precision": 1.0,
+      "false_escalation_rate": 0.0,
+      "error_attribution_counts": {
+        "INCORRECT_INTENT_EXTRACTION": 14,
+        "CORRECT_ALL": 23,
+        "INCORRECT_VALIDATION_RESULT": 2
+      }
+    }
+  }
+}

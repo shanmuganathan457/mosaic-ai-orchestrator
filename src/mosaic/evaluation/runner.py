@@ -27,6 +27,8 @@ class EvaluationRunner:
         self,
         systems: Optional[List[BaseResearchSystem]] = None,
         dataset_version: str = "v1",
+        provider_name: str = "mock",
+        model_name: str = "mock-deterministic-v1",
     ) -> None:
         self.systems = systems or [
             BaselineASingleIntentSystem(),
@@ -34,6 +36,8 @@ class EvaluationRunner:
             MosaicResearchSystem(),
         ]
         self.dataset_version = dataset_version
+        self.provider_name = provider_name
+        self.model_name = model_name
 
     def run_benchmark(self, dataset_or_path: Union[str, Path, List[BenchmarkCase]]) -> EvaluationReport:
         """Runs all registered systems across benchmark dataset cases and generates structured report."""
@@ -58,6 +62,8 @@ class EvaluationRunner:
 
         return EvaluationReport(
             dataset_version=self.dataset_version,
+            provider_name=self.provider_name,
+            model_name=self.model_name,
             total_cases=len(cases),
             systems=systems_aggregate,
             per_case_results=all_results,
@@ -75,3 +81,98 @@ class EvaluationRunner:
             f.write(report.model_dump_json(indent=2))
 
         return report
+
+
+def main() -> None:
+    """CLI Entry Point for MOSAIC Benchmark Evaluation execution."""
+    import argparse
+    import sys
+    import urllib.request
+    from mosaic.compiler.llm_compiler import LLMActionCompiler
+    from mosaic.intake.llm_decomposer import LLMIntentDecomposer
+    from mosaic.llm.factory import LLMProviderFactory
+
+    parser = argparse.ArgumentParser(description="MOSAIC Research Benchmark Evaluation Runner")
+    parser.add_argument("--provider", type=str, default="mock", choices=["mock", "ollama"], help="LLM Provider type")
+    parser.add_argument("--model", type=str, default=None, help="Model name identifier")
+    parser.add_argument("--dataset", type=str, default="v1_natural_language", choices=["v1", "v1_natural_language"], help="Benchmark dataset version")
+    parser.add_argument("--output", type=str, default=None, help="Output JSON path")
+    args = parser.parse_args()
+
+    provider_name = args.provider.lower()
+    dataset_version = args.dataset
+
+    if dataset_version == "v1_natural_language":
+        dataset_path = Path("tests/fixtures/research_dataset/v1_natural_language/cases.json")
+    else:
+        dataset_path = Path("tests/fixtures/research_dataset/v1/cases.json")
+
+    # Strict availability check for Ollama experiment mode
+    if provider_name == "ollama":
+        base_url = "http://localhost:11434"
+        try:
+            with urllib.request.urlopen(f"{base_url}/api/tags", timeout=3) as resp:
+                if resp.status != 200:
+                    print(f"ERROR: Ollama server at {base_url} returned status {resp.status}.", file=sys.stderr)
+                    sys.exit(1)
+        except Exception as e:
+            print(f"CRITICAL ERROR: Requested --provider ollama but Ollama server is unreachable at {base_url}: {e}", file=sys.stderr)
+            print("Research integrity error: Refusing to silently substitute MockLLMProvider when Ollama was explicitly requested.", file=sys.stderr)
+            sys.exit(1)
+
+        model_name = args.model or "llama3.2"
+        llm_p = LLMProviderFactory.get_provider("ollama", model_name=model_name)
+        decomposer = LLMIntentDecomposer(llm_provider=llm_p)
+        compiler = LLMActionCompiler(llm_provider=llm_p)
+        systems = [
+            BaselineASingleIntentSystem(intake_engine=decomposer, compiler=compiler),
+            BaselineBDirectMultiAgentSystem(intake_engine=decomposer, compiler=compiler),
+            MosaicResearchSystem(orchestrator=MosaicOrchestrator(intake_engine=decomposer, action_compiler=compiler)),
+        ]
+    else:
+        model_name = args.model or "mock-deterministic-v1"
+        systems = [
+            BaselineASingleIntentSystem(),
+            BaselineBDirectMultiAgentSystem(),
+            MosaicResearchSystem(),
+        ]
+
+    output_dir = Path("evaluation_results/phase_7b") / model_name
+    output_file = Path(args.output) if args.output else output_dir / "results.json"
+
+    print(f"==================================================")
+    print(f"MOSAIC PHASE 7B BENCHMARK EVALUATION")
+    print(f"==================================================")
+    print(f"Provider:       {provider_name}")
+    print(f"Model:          {model_name}")
+    print(f"Dataset:        {dataset_version} ({dataset_path})")
+    print(f"Output Path:    {output_file}")
+    print(f"==================================================")
+
+    runner = EvaluationRunner(
+        systems=systems,
+        dataset_version=dataset_version,
+        provider_name=provider_name,
+        model_name=model_name,
+    )
+    report = runner.run_and_save_report(dataset_path, output_file)
+
+    # Save summary report
+    summary_file = output_dir / "summary.json"
+    with open(summary_file, "w", encoding="utf-8") as f:
+        json.dump({
+            "provider_name": provider_name,
+            "model_name": model_name,
+            "dataset_version": dataset_version,
+            "total_cases": report.total_cases,
+            "systems": {k: v.model_dump() for k, v in report.systems.items()},
+        }, f, indent=2)
+
+    print("\nAGGREGATE BENCHMARK RESULTS:")
+    print(json.dumps({k: v.model_dump() for k, v in report.systems.items()}, indent=2))
+    print(f"\nSaved full report to: {output_file}")
+    print(f"Saved summary to:     {summary_file}")
+
+
+if __name__ == "__main__":
+    main()

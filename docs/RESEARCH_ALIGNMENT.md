@@ -53,12 +53,13 @@ Research requirement: The LLM may propose candidate intents or actions, but **mu
 - [x] Abstract Action Compiler Strategy (`BaseActionCompiler`)
 - [x] LLM-Backed Structured Semantic Action Compiler (`LLMActionCompiler`)
 - [x] Controlled Research Benchmark Dataset v1 (`tests/fixtures/research_dataset/v1/cases.json`)
+- [x] Natural Language Benchmark Dataset v1_natural_language (`tests/fixtures/research_dataset/v1_natural_language/cases.json`)
+- [x] Root Cause Error Attribution Taxonomy Evaluator (`mosaic.evaluation.error_attribution`)
 - [x] Research Baseline Implementations (`BaselineASingleIntentSystem`, `BaselineBDirectMultiAgentSystem`)
-- [x] Evaluation Harness Runner & Metrics (`EvaluationRunner`, `compute_aggregate_metrics`)
+- [x] Evaluation Harness Runner, CLI & Metrics (`EvaluationRunner`, `compute_aggregate_metrics`)
 - [x] Strategy-Injectable Pipeline Orchestrator (`MosaicOrchestrator`)
-- [x] 69 passing pytest unit, integration, & evaluation benchmark tests (`tests/`)
+- [x] 72 passing pytest unit, integration, & benchmark runner tests (`tests/`)
 
 ### Intentionally NOT Yet Implemented
-- [ ] Natural Language Variation Benchmark Evaluation with Live Ollama (Phase 7B)
 - [ ] Response Synthesis & Real System Execution (Phase 8)
 - [ ] Frontend Dashboard / UI

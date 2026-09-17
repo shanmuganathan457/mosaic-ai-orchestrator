@@ -1,0 +1,3230 @@
+{
+  "dataset_version": "v1_natural_language",
+  "provider_name": "mock",
+  "model_name": "mock-deterministic-v1",
+  "total_cases": 39,
+  "systems": {
+    "baseline_a_single_intent": {
+      "total_cases": 39,
+      "verdict_accuracy": 0.3077,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5294,
+      "intent_f1": 0.6923,
+      "action_coverage": 0.5294,
+      "unexpected_action_rate": 0.0,
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "escalation_precision": 0.25,
+      "false_escalation_rate": 0.3,
+      "error_attribution_counts": {
+        "INCORRECT_INTENT_EXTRACTION": 22,
+        "INCORRECT_VALIDATION_RESULT": 13,
+        "CORRECT_ALL": 4
+      }
+    },
+    "baseline_b_direct_multi_agent": {
+      "total_cases": 39,
+      "verdict_accuracy": 0.3077,
+      "intent_precision": 1.0,
+      "intent_recall": 0.6863,
+      "intent_f1": 0.814,
+      "action_coverage": 0.6863,
+      "unexpected_action_rate": 0.0,
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "escalation_precision": 0.25,
+      "false_escalation_rate": 0.3,
+      "error_attribution_counts": {
+        "INCORRECT_INTENT_EXTRACTION": 14,
+        "CORRECT_ALL": 7,
+        "INCORRECT_VALIDATION_RESULT": 18
+      }
+    },
+    "mosaic_validated": {
+      "total_cases": 39,
+      "verdict_accuracy": 0.7692,
+      "intent_precision": 1.0,
+      "intent_recall": 0.6863,
+      "intent_f1": 0.814,
+      "action_coverage": 0.6863,
+      "unexpected_action_rate": 0.0,
+      "conflict_precision": 0.3611,
+      "conflict_recall": 0.5417,
+      "conflict_f1": 0.4333,
+      "escalation_precision": 1.0,
+      "false_escalation_rate": 0.0,
+      "error_attribution_counts": {
+        "INCORRECT_INTENT_EXTRACTION": 14,
+        "CORRECT_ALL": 23,
+        "INCORRECT_VALIDATION_RESULT": 2
+      }
+    }
+  },
+  "per_case_results": [
+    {
+      "case_id": "case_001_variant_01",
+      "source_case_id": "case_001",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_02",
+      "source_case_id": "case_001",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_03",
+      "source_case_id": "case_001",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_002_variant_01",
+      "source_case_id": "case_002",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_002_variant_02",
+      "source_case_id": "case_002",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_002_variant_03",
+      "source_case_id": "case_002",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_003_variant_01",
+      "source_case_id": "case_003",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_003_variant_02",
+      "source_case_id": "case_003",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restrict_account"
+      ],
+      "predicted_actions": [
+        "restrict_account"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_003_variant_03",
+      "source_case_id": "case_003",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restrict_account"
+      ],
+      "predicted_actions": [
+        "restrict_account"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_004_variant_01",
+      "source_case_id": "case_004",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_004_variant_02",
+      "source_case_id": "case_004",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_004_variant_03",
+      "source_case_id": "case_004",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_005_variant_01",
+      "source_case_id": "case_005",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_005_variant_02",
+      "source_case_id": "case_005",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_005_variant_03",
+      "source_case_id": "case_005",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_01",
+      "source_case_id": "case_006",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_02",
+      "source_case_id": "case_006",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_03",
+      "source_case_id": "case_006",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_007_variant_01",
+      "source_case_id": "case_007",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_007_variant_02",
+      "source_case_id": "case_007",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_007_variant_03",
+      "source_case_id": "case_007",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_008_variant_01",
+      "source_case_id": "case_008",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_008_variant_02",
+      "source_case_id": "case_008",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_008_variant_03",
+      "source_case_id": "case_008",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_009_variant_01",
+      "source_case_id": "case_009",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restrict_account"
+      ],
+      "predicted_actions": [
+        "restrict_account"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_009_variant_02",
+      "source_case_id": "case_009",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restrict_account"
+      ],
+      "predicted_actions": [
+        "restrict_account"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_009_variant_03",
+      "source_case_id": "case_009",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restrict_account"
+      ],
+      "predicted_actions": [
+        "restrict_account"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_010_variant_01",
+      "source_case_id": "case_010",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_010_variant_02",
+      "source_case_id": "case_010",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_010_variant_03",
+      "source_case_id": "case_010",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_021_variant_01",
+      "source_case_id": "case_021",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_021_variant_02",
+      "source_case_id": "case_021",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_021_variant_03",
+      "source_case_id": "case_021",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_022_variant_01",
+      "source_case_id": "case_022",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_022_variant_02",
+      "source_case_id": "case_022",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_022_variant_03",
+      "source_case_id": "case_022",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_SINGLE_ACTION_EXECUTION",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_023_variant_01",
+      "source_case_id": "case_023",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_023_variant_02",
+      "source_case_id": "case_023",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_023_variant_03",
+      "source_case_id": "case_023",
+      "system_name": "baseline_a_single_intent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_01",
+      "source_case_id": "case_001",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_02",
+      "source_case_id": "case_001",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_03",
+      "source_case_id": "case_001",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment",
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "refund_payment",
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_002_variant_01",
+      "source_case_id": "case_002",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_002_variant_02",
+      "source_case_id": "case_002",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_002_variant_03",
+      "source_case_id": "case_002",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_003_variant_01",
+      "source_case_id": "case_003",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_003_variant_02",
+      "source_case_id": "case_003",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_003_variant_03",
+      "source_case_id": "case_003",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restrict_account",
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_004_variant_01",
+      "source_case_id": "case_004",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_004_variant_02",
+      "source_case_id": "case_004",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_004_variant_03",
+      "source_case_id": "case_004",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_005_variant_01",
+      "source_case_id": "case_005",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_005_variant_02",
+      "source_case_id": "case_005",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_005_variant_03",
+      "source_case_id": "case_005",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_01",
+      "source_case_id": "case_006",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_02",
+      "source_case_id": "case_006",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_03",
+      "source_case_id": "case_006",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_007_variant_01",
+      "source_case_id": "case_007",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_007_variant_02",
+      "source_case_id": "case_007",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_007_variant_03",
+      "source_case_id": "case_007",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_008_variant_01",
+      "source_case_id": "case_008",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_008_variant_02",
+      "source_case_id": "case_008",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_008_variant_03",
+      "source_case_id": "case_008",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_009_variant_01",
+      "source_case_id": "case_009",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_009_variant_02",
+      "source_case_id": "case_009",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_009_variant_03",
+      "source_case_id": "case_009",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_010_variant_01",
+      "source_case_id": "case_010",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_010_variant_02",
+      "source_case_id": "case_010",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "cancel_subscription",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "cancel_subscription",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_010_variant_03",
+      "source_case_id": "case_010",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "cancel_subscription",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "cancel_subscription",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_021_variant_01",
+      "source_case_id": "case_021",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_021_variant_02",
+      "source_case_id": "case_021",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_021_variant_03",
+      "source_case_id": "case_021",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_022_variant_01",
+      "source_case_id": "case_022",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_022_variant_02",
+      "source_case_id": "case_022",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_022_variant_03",
+      "source_case_id": "case_022",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_023_variant_01",
+      "source_case_id": "case_023",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_023_variant_02",
+      "source_case_id": "case_023",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_023_variant_03",
+      "source_case_id": "case_023",
+      "system_name": "baseline_b_direct_multi_agent",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "NO_INTENT_DETECTED",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_01",
+      "source_case_id": "case_001",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_02",
+      "source_case_id": "case_001",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_001_variant_03",
+      "source_case_id": "case_001",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment",
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "refund_payment",
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_002_variant_01",
+      "source_case_id": "case_002",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_002_variant_02",
+      "source_case_id": "case_002",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_002_variant_03",
+      "source_case_id": "case_002",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_003_variant_01",
+      "source_case_id": "case_003",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_003_variant_02",
+      "source_case_id": "case_003",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_003_variant_03",
+      "source_case_id": "case_003",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restrict_account",
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_004_variant_01",
+      "source_case_id": "case_004",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.5,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.6667,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_004_variant_02",
+      "source_case_id": "case_004",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.5,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.6667,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_004_variant_03",
+      "source_case_id": "case_004",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.5,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.6667,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_005_variant_01",
+      "source_case_id": "case_005",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_005_variant_02",
+      "source_case_id": "case_005",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "cancel_subscription"
+      ],
+      "predicted_actions": [
+        "cancel_subscription"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_005_variant_03",
+      "source_case_id": "case_005",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_01",
+      "source_case_id": "case_006",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_02",
+      "source_case_id": "case_006",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_006_variant_03",
+      "source_case_id": "case_006",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_007_variant_01",
+      "source_case_id": "case_007",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_007_variant_02",
+      "source_case_id": "case_007",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_007_variant_03",
+      "source_case_id": "case_007",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": true,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_008_variant_01",
+      "source_case_id": "case_008",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_008_variant_02",
+      "source_case_id": "case_008",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "refund_payment"
+      ],
+      "predicted_actions": [
+        "refund_payment"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 1.0,
+      "conflict_recall": 1.0,
+      "conflict_f1": 1.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_008_variant_03",
+      "source_case_id": "case_008",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "PRECONDITION_UNSATISFIED"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_009_variant_01",
+      "source_case_id": "case_009",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY",
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_009_variant_02",
+      "source_case_id": "case_009",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_009_variant_03",
+      "source_case_id": "case_009",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restrict_account",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "BLOCK",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [
+        "MUTUALLY_EXCLUSIVE_POSTCONDITION"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_010_variant_01",
+      "source_case_id": "case_010",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 0.5,
+      "intent_f1": 0.6667,
+      "action_coverage": 0.5,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY",
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_010_variant_02",
+      "source_case_id": "case_010",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "cancel_subscription",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "cancel_subscription",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_010_variant_03",
+      "source_case_id": "case_010",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "cancel_subscription",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "cancel_subscription",
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "BLOCK",
+      "expected_verdict": "ALLOW",
+      "verdict_correct": false,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "MISSING_DEPENDENCY",
+        "MISSING_DEPENDENCY"
+      ],
+      "expected_conflicts": [],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_BLOCK",
+      "error_category": "INCORRECT_VALIDATION_RESULT"
+    },
+    {
+      "case_id": "case_021_variant_01",
+      "source_case_id": "case_021",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access",
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "AMBIGUOUS_EVIDENCE",
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.3333,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.5,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ESCALATED",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_021_variant_02",
+      "source_case_id": "case_021",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.3333,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.5,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ESCALATED",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_021_variant_03",
+      "source_case_id": "case_021",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.3333,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.5,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ESCALATED",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_022_variant_01",
+      "source_case_id": "case_022",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.3333,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.5,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ESCALATED",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_022_variant_02",
+      "source_case_id": "case_022",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.3333,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.5,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ESCALATED",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_022_variant_03",
+      "source_case_id": "case_022",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [
+        "restore_login_access"
+      ],
+      "predicted_actions": [
+        "restore_login_access"
+      ],
+      "predicted_verdict": "ESCALATED",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": true,
+      "intent_precision": 1.0,
+      "intent_recall": 1.0,
+      "intent_f1": 1.0,
+      "action_coverage": 1.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [
+        "PRECONDITION_UNSATISFIED",
+        "MISSING_DEPENDENCY",
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.3333,
+      "conflict_recall": 1.0,
+      "conflict_f1": 0.5,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ESCALATED",
+      "error_category": "CORRECT_ALL"
+    },
+    {
+      "case_id": "case_023_variant_01",
+      "source_case_id": "case_023",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_023_variant_02",
+      "source_case_id": "case_023",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    },
+    {
+      "case_id": "case_023_variant_03",
+      "source_case_id": "case_023",
+      "system_name": "mosaic_validated",
+      "predicted_intents": [],
+      "predicted_actions": [],
+      "predicted_verdict": "ALLOW",
+      "expected_verdict": "ESCALATED",
+      "verdict_correct": false,
+      "intent_precision": 0.0,
+      "intent_recall": 0.0,
+      "intent_f1": 0.0,
+      "action_coverage": 0.0,
+      "unexpected_action_rate": 0.0,
+      "detected_conflicts": [],
+      "expected_conflicts": [
+        "AMBIGUOUS_EVIDENCE"
+      ],
+      "conflict_precision": 0.0,
+      "conflict_recall": 0.0,
+      "conflict_f1": 0.0,
+      "execution_outcome": "MOSAIC_VALIDATED_VERDICT_ALLOW",
+      "error_category": "INCORRECT_INTENT_EXTRACTION"
+    }
+  ]
+}

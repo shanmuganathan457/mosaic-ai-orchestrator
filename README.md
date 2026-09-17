@@ -50,9 +50,13 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 - [x] **Phase 7A: Local LLM Provider Integration (Ollama)** (`src/mosaic/llm/ollama.py`, `src/mosaic/llm/factory.py`)
   - Local HTTP-based Ollama provider (`OllamaProvider`) conforming to `BaseLLMProvider` using zero external framework dependencies (`urllib.request`).
   - Provider Factory (`LLMProviderFactory`) for runtime resolution of `mock` and `ollama` providers.
-  - Preserved 100% offline default testing using `MockLLMProvider`.
-  - 69 passing unit/integration tests + 1 optional live Ollama skipped test (`tests/test_ollama_provider.py`).
-  - 69 passing pytest unit, integration, & benchmark runner tests (`tests/`)
+- [x] **Phase 7B: Natural-Language LLM Evaluation** (`tests/fixtures/research_dataset/v1_natural_language/`, `src/mosaic/evaluation/`)
+  - Synthetic Natural Language Benchmark Dataset (`v1_natural_language`): 39 natural-language variants referencing authoritative `source_case_id` ground truth.
+  - Action-level metrics: Action Coverage, Unexpected Action Rate.
+  - Root Cause Error Attribution Taxonomy: `CORRECT_ALL`, `INCORRECT_INTENT_EXTRACTION`, `INCORRECT_ACTION_COMPILATION`, `INCORRECT_VALIDATION_RESULT`, `INCORRECT_FINAL_INTERPRETATION`.
+  - Reusable CLI Entry Point (`python -c "import sys; sys.path.insert(0, 'src'); from mosaic.evaluation.runner import main; main()" --provider mock --dataset v1_natural_language`).
+  - Serialized evaluation reports output to `evaluation_results/phase_7b/<model>/`.
+  - 72 passing unit/integration tests + 1 optional live Ollama skipped test (`tests/`).
 
 ---
 

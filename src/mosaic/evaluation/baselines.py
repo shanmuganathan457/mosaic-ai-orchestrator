@@ -102,8 +102,25 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
             set(case.expected_intents),
         )
 
+        # Baseline A action metrics & error attribution
+        exp_actions = set(case.expected_agent_actions)
+        pred_actions = set(predicted_actions)
+        act_cov = len(pred_actions.intersection(exp_actions)) / len(exp_actions) if exp_actions else 1.0
+        unexp_act_rate = len(pred_actions - exp_actions) / len(pred_actions) if pred_actions else 0.0
+
+        from mosaic.evaluation.error_attribution import determine_error_category
+        err_cat = determine_error_category(
+            predicted_intents=predicted_intents,
+            expected_intents=case.expected_intents,
+            predicted_actions=predicted_actions,
+            expected_actions=case.expected_agent_actions,
+            predicted_verdict=predicted_verdict,
+            expected_verdict=case.expected_final_verdict,
+        )
+
         return EvaluationSystemResult(
             case_id=case.case_id,
+            source_case_id=case.source_case_id,
             system_name=self.system_name,
             predicted_intents=predicted_intents,
             predicted_actions=predicted_actions,
@@ -113,12 +130,15 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
             intent_precision=i_prec,
             intent_recall=i_rec,
             intent_f1=i_f1,
+            action_coverage=round(act_cov, 4),
+            unexpected_action_rate=round(unexp_act_rate, 4),
             detected_conflicts=detected_conflicts,
             expected_conflicts=case.expected_conflicts,
             conflict_precision=prec,
             conflict_recall=rec,
             conflict_f1=f1,
             execution_outcome="DIRECT_SINGLE_ACTION_EXECUTION" if predicted_actions else "NO_INTENT_DETECTED",
+            error_category=err_cat,
         )
 
 
@@ -181,8 +201,25 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
             set(case.expected_intents),
         )
 
+        # Baseline B action metrics & error attribution
+        exp_actions = set(case.expected_agent_actions)
+        pred_actions = set(predicted_actions)
+        act_cov = len(pred_actions.intersection(exp_actions)) / len(exp_actions) if exp_actions else 1.0
+        unexp_act_rate = len(pred_actions - exp_actions) / len(pred_actions) if pred_actions else 0.0
+
+        from mosaic.evaluation.error_attribution import determine_error_category
+        err_cat = determine_error_category(
+            predicted_intents=predicted_intents,
+            expected_intents=case.expected_intents,
+            predicted_actions=predicted_actions,
+            expected_actions=case.expected_agent_actions,
+            predicted_verdict=predicted_verdict,
+            expected_verdict=case.expected_final_verdict,
+        )
+
         return EvaluationSystemResult(
             case_id=case.case_id,
+            source_case_id=case.source_case_id,
             system_name=self.system_name,
             predicted_intents=predicted_intents,
             predicted_actions=predicted_actions,
@@ -192,12 +229,15 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
             intent_precision=i_prec,
             intent_recall=i_rec,
             intent_f1=i_f1,
+            action_coverage=round(act_cov, 4),
+            unexpected_action_rate=round(unexp_act_rate, 4),
             detected_conflicts=detected_conflicts,
             expected_conflicts=case.expected_conflicts,
             conflict_precision=prec,
             conflict_recall=rec,
             conflict_f1=f1,
             execution_outcome="DIRECT_UNVALIDATED_MULTI_ACTION_SYNTHESIS" if predicted_actions else "NO_INTENT_DETECTED",
+            error_category=err_cat,
         )
 
 
@@ -289,8 +329,25 @@ class MosaicResearchSystem(BaseResearchSystem):
             set(case.expected_intents),
         )
 
+        # MOSAIC action metrics & error attribution
+        exp_actions = set(case.expected_agent_actions)
+        pred_actions = set(predicted_actions)
+        act_cov = len(pred_actions.intersection(exp_actions)) / len(exp_actions) if exp_actions else 1.0
+        unexp_act_rate = len(pred_actions - exp_actions) / len(pred_actions) if pred_actions else 0.0
+
+        from mosaic.evaluation.error_attribution import determine_error_category
+        err_cat = determine_error_category(
+            predicted_intents=predicted_intents,
+            expected_intents=case.expected_intents,
+            predicted_actions=predicted_actions,
+            expected_actions=case.expected_agent_actions,
+            predicted_verdict=validation_result.verdict,
+            expected_verdict=case.expected_final_verdict,
+        )
+
         return EvaluationSystemResult(
             case_id=case.case_id,
+            source_case_id=case.source_case_id,
             system_name=self.system_name,
             predicted_intents=predicted_intents,
             predicted_actions=predicted_actions,
@@ -300,10 +357,13 @@ class MosaicResearchSystem(BaseResearchSystem):
             intent_precision=i_prec,
             intent_recall=i_rec,
             intent_f1=i_f1,
+            action_coverage=round(act_cov, 4),
+            unexpected_action_rate=round(unexp_act_rate, 4),
             detected_conflicts=detected_conflicts,
             expected_conflicts=case.expected_conflicts,
             conflict_precision=prec,
             conflict_recall=rec,
             conflict_f1=f1,
             execution_outcome=f"MOSAIC_VALIDATED_VERDICT_{validation_result.verdict.value}",
+            error_category=err_cat,
         )

@@ -95,15 +95,43 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
     escalation_precision = round(true_escalations / predicted_escalations, 4) if predicted_escalations > 0 else 1.0
     false_escalation_rate = round(false_escalations / ground_truth_non_escalated, 4) if ground_truth_non_escalated > 0 else 0.0
 
+    # Action Coverage & Unexpected Action Rate across dataset
+    total_expected_actions_count = 0
+    covered_expected_actions_count = 0
+    total_predicted_actions_count = 0
+    unexpected_predicted_actions_count = 0
+
+    for r in results:
+        bench_case = case_map.get(r.case_id)
+        if bench_case:
+            exp_actions = set(bench_case.expected_agent_actions)
+            pred_actions = set(r.predicted_actions)
+            total_expected_actions_count += len(exp_actions)
+            covered_expected_actions_count += len(pred_actions.intersection(exp_actions))
+            total_predicted_actions_count += len(r.predicted_actions)
+            unexpected_predicted_actions_count += len(pred_actions - exp_actions)
+
+    action_coverage = round(covered_expected_actions_count / total_expected_actions_count, 4) if total_expected_actions_count > 0 else 1.0
+    unexpected_action_rate = round(unexpected_predicted_actions_count / total_predicted_actions_count, 4) if total_predicted_actions_count > 0 else 0.0
+
+    # Error attribution counts
+    error_counts: Dict[str, int] = {}
+    for r in results:
+        cat = r.error_category
+        error_counts[cat] = error_counts.get(cat, 0) + 1
+
     return AggregateMetrics(
         total_cases=total_cases,
         verdict_accuracy=verdict_accuracy,
         intent_precision=intent_prec,
         intent_recall=intent_rec,
         intent_f1=intent_f1,
+        action_coverage=action_coverage,
+        unexpected_action_rate=unexpected_action_rate,
         conflict_precision=prec,
         conflict_recall=rec,
         conflict_f1=f1,
         escalation_precision=escalation_precision,
         false_escalation_rate=false_escalation_rate,
+        error_attribution_counts=error_counts,
     )

@@ -1,7 +1,7 @@
 # MOSAIC Architecture & Technical Specifications
 
 **Multi-Intent Orchestration & State-Aware Intelligent Coordination**  
-*Version 0.8.0 — Phase 7A Local LLM Provider Integration (Ollama) Specifications*
+*Version 0.9.0 — Phase 7B Natural-Language LLM Evaluation Specifications*
 
 ---
 
