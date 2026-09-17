@@ -36,31 +36,28 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 - [x] **Phase 1: Project Initialization & Domain Schemas** (`docs/ARCHITECTURE.md`, `src/mosaic/domain/models/schemas.py`)
 - [x] **Phase 2: Deterministic Validation Engine** (`src/mosaic/validation/`)
   - Sub-evaluators: `PreconditionEvaluator`, `DependencyEvaluator`, `PolicyEvaluator`, `PostconditionConflictEvaluator`
-- [x] **Phase 3: Semantic State Compiler & Mock Domain Agents**
-  - Deterministic Mock Agents: `SecurityMockAgent`, `BillingMockAgent`, `SubscriptionMockAgent`, `AccessMockAgent` (`src/mosaic/agents/`)
-  - Semantic State Compiler (`src/mosaic/compiler/`)
-  - 10-Case Controlled Test Dataset (`tests/fixtures/controlled_dataset.py`)
-  - 26 passing pytest unit & end-to-end pipeline tests (`tests/`)
+- [x] **Phase 3: Semantic State Compiler & Mock Domain Agents** (`src/mosaic/compiler/`, `src/mosaic/agents/`)
+- [x] **Phase 4: Deterministic Intent Decomposition Engine & End-to-End Orchestrator** (`src/mosaic/intake/`, `src/mosaic/orchestrator.py`)
+  - Rule-based intent & evidence span extractor (`IntentDecompositionEngine`)
+  - End-to-end pipeline coordinator (`MosaicOrchestrator`)
+  - 29 passing pytest unit & pipeline tests (`tests/`)
 
 ---
 
 ## 4. System Architecture & Data Flow
 
 ```
-Incoming Customer Communication (Raw Case)
+Incoming Customer Communication (Raw Message)
               │
               ▼
-    1. Intake & Case Management
+    1. Intent Decomposition Engine (IntentSpans)
               │
               ▼
- 2. Intent & Evidence Decomposition (IntentSpans)
-              │
-              ▼
-  3. Specialized Mock Domain Agents (AgentProposals)
+  2. Specialized Mock Domain Agents (AgentProposals)
      (Security, Billing, Subscription, Access)
               │
               ▼
-  4. Semantic State Compiler (Structured Actions)
+  3. Semantic State Compiler (Structured Actions)
               │
               ▼
 ════════════════════════════════════════════════════
@@ -76,7 +73,7 @@ Incoming Customer Communication (Raw Case)
         [ ALLOW ]              [ BLOCK / ESCALATE ]
               │                         │
               ▼                         ▼
-   5. Response Synthesis &     6. Human Escalation &
+   4. Response Synthesis &     5. Human Escalation &
       Side-Effect Execution       Audit Logging
 ```
 
@@ -87,7 +84,7 @@ Incoming Customer Communication (Raw Case)
 ```
 mosaic-ai-orchestrator/
 ├── docs/
-│   ├── ARCHITECTURE.md          # Architectural specifications & Phase 3 components
+│   ├── ARCHITECTURE.md          # Architectural specifications & Phase 4 components
 │   └── RESEARCH_ALIGNMENT.md    # Mapping code modules to research document
 ├── src/
 │   └── mosaic/
@@ -105,13 +102,17 @@ mosaic-ai-orchestrator/
 │       │   │   ├── __init__.py
 │       │   │   └── schemas.py
 │       │   └── __init__.py
+│       ├── intake/              # Deterministic Intent Decomposition Engine
+│       │   ├── __init__.py
+│       │   └── decomposer.py
 │       ├── validation/          # Core deterministic Validation Engine & sub-evaluators
 │       │   ├── __init__.py
 │       │   ├── base.py
 │       │   ├── engine.py
 │       │   └── evaluators.py
 │       ├── __init__.py
-│       └── main.py              # FastAPI entrypoint & health check endpoint
+│       ├── main.py              # FastAPI entrypoint & health check endpoint
+│       └── orchestrator.py      # End-to-end pipeline coordinator
 ├── tests/
 │   ├── fixtures/
 │   │   ├── __init__.py
@@ -120,6 +121,7 @@ mosaic-ai-orchestrator/
 │   ├── test_compiler_and_agents.py
 │   ├── test_domain_models.py
 │   ├── test_end_to_end_pipeline.py
+│   ├── test_intake_and_orchestrator.py
 │   └── test_validation_engine.py
 ├── pyproject.toml               # Build & dependency configuration
 └── README.md                    # Project documentation
@@ -153,7 +155,7 @@ mosaic-ai-orchestrator/
    pip install -e ".[dev]"
    ```
 
-4. **Run Complete Pytest Suite (26 Tests):**
+4. **Run Complete Pytest Suite (29 Tests):**
    ```bash
    python -m pytest
    ```

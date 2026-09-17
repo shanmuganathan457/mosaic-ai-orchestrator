@@ -1,7 +1,7 @@
 # MOSAIC Architecture & Technical Specifications
 
 **Multi-Intent Orchestration & State-Aware Intelligent Coordination**  
-*Version 0.3.0 — Phase 3 Architecture & Compiler Specifications*
+*Version 0.4.0 — Phase 4 Architecture & Intent Decomposition Specifications*
 
 ---
 
@@ -22,30 +22,26 @@ MOSAIC introduces a **deterministic, inspectable, state-dependent Validation Eng
 
 ## 2. System Architecture & Component Boundaries
 
-The system follows strict separation of concerns between domain perception/proposals, semantic state compilation, and validation logic.
+The system follows strict separation of concerns between raw intake perception, domain agent proposals, semantic state compilation, and validation logic.
 
 ```
-Incoming Customer Communication (Email / Text)
-                    │
-                    ▼
-          ┌───────────────────┐
-          │   1. Intake API   │
-          └─────────┬─────────┘
+Incoming Customer Communication (Raw Case Message)
                     │
                     ▼
     ┌───────────────────────────────┐
-    │ 2. Intent & Evidence Compiler │
+    │ 1. Intent Decomposition Engine│  <-- "Extract IntentSpans & Create SubTasks"
+    │    (mosaic.intake)            │
     └───────────────┬───────────────┘
-                    │ (IntentSpans + Case Object)
+                    │ (Canonical Case + SubTasks)
                     ▼
     ┌─────────────────────────────────┐
-    │ 3. Specialized Mock AI Agents   │
+    │ 2. Specialized Mock AI Agents   │
     │ (Security, Billing, Sub, Access)│  <-- "What do I propose?"
     └───────────────┬─────────────────┘
                     │ (Unvalidated AgentProposals)
                     ▼
    ┌─────────────────────────────────┐
-   │ 4. Semantic State Compiler      │
+   │ 3. Semantic State Compiler      │
    │    (Translates proposals into   │  <-- "What structured action does this represent?"
    │     strongly typed Actions)     │
    └────────────────┬────────────────┘
@@ -63,7 +59,7 @@ Incoming Customer Communication (Email / Text)
                     │
                     ▼
      ┌─────────────────────────────┐
-     │ 5. Validation Outcome       │
+     │ 4. Validation Outcome       │
      │    (ALLOW / BLOCK / ESCALATE)│
      └──────────────┬──────────────┘
                     │
@@ -73,55 +69,24 @@ Incoming Customer Communication (Email / Text)
           │                   │
           ▼                   ▼
 ┌──────────────────┐  ┌──────────────────────┐
-│ 6. Response Synth│  │ 7. Human Escalation  │
+│ 5. Response Synth│  │ 6. Human Escalation  │
 │    & Execution   │  │    & Audit Logging   │
 └──────────────────┘  └──────────────────────┘
 ```
 
 ### Component Responsibilities & Separation Boundaries
 
-1. **Intake API & Case Management:** Normalizes incoming raw communications, establishes case tracking records, and tracks state transitions.
-2. **Intent Decomposition Engine:** Parses compound customer messages into granular, evidence-backed `IntentSpan` records tied to verbatim text.
-3. **Specialized Mock Domain Agents (`mosaic.agents`):** Domain-specific worker agents (Security, Billing, Subscription, Access) that produce unvalidated candidate `AgentProposal` payloads. *(Note: Currently implemented as deterministic mock agents for offline research benchmarking.)*
-4. **Semantic State Compiler (`mosaic.compiler`):** Formats natural language / semi-structured proposals into strongly-typed `Action` primitives with explicit preconditions, postconditions, dependencies, and risk levels. **Crucially, the compiler performs zero validation decision making.**
-5. **Deterministic Validation Engine (`mosaic.validation`):** The core research artifact. Evaluates structured actions against the current `CaseState`, active `Dependency` graphs, and system `PolicyRule`s strictly deterministically. Returns a `ValidationResult` (`ALLOW`, `BLOCK`, `ESCALATE`) along with explicit diagnostic `Conflict` items.
-6. **Response Synthesizer / Execution Orchestrator:** Formulates final customer-facing responses using *only* explicitly `ALLOW`ed actions.
-7. **Audit & Trace System:** Emits immutable `AuditEvent` logs capturing raw proposals, compiled actions, state snapshots, evaluation traces, and validation decisions.
+1. **Intent Decomposition Engine (`mosaic.intake`):** Rule-based, deterministic intent extractor parsing raw customer messages into non-overlapping `IntentSpan` objects and creating assigned `SubTask` records.
+2. **Specialized Mock Domain Agents (`mosaic.agents`):** Domain-specific worker agents (Security, Billing, Subscription, Access) that produce unvalidated candidate `AgentProposal` payloads based on assigned subtasks.
+3. **Semantic State Compiler (`mosaic.compiler`):** Formats natural language / semi-structured proposals into strongly-typed `Action` primitives with explicit preconditions, postconditions, dependencies, and risk levels. **Crucially, the compiler performs zero validation decision making.**
+4. **Deterministic Validation Engine (`mosaic.validation`):** Evaluates structured actions against the current `CaseState`, active `Dependency` graphs, and system `PolicyRule`s strictly deterministically. Returns a `ValidationResult` (`ALLOW`, `BLOCK`, `ESCALATE`) along with explicit diagnostic `Conflict` items.
+5. **Mosaic Orchestrator (`mosaic.orchestrator`):** Pipeline manager coordinating end-to-end flow from Raw Intake to Final Validation Verdict.
 
 ---
 
-## 3. Data Flow & Controlled Test Dataset
-
-```
-[Raw Case Text] ──► Mock Agents ──► AgentProposals ──► Compiler ──► Actions ──► Validator ──► Verdict
-```
-
-### Controlled Dataset (10 Benchmark Cases)
-Located in `tests/fixtures/controlled_dataset.py`, covering:
-1. **Case 1:** Single-intent valid subscription cancellation → `ALLOW`
-2. **Case 2:** Single-intent refund request with unverified payment → `BLOCK`
-3. **Case 3:** Two independent valid intents (Cancel + Refund) → `ALLOW`
-4. **Case 4:** Access restoration with completed identity verification → `ALLOW`
-5. **Case 5:** Access restoration without completed identity verification → `BLOCK`
-6. **Case 6:** Security lock vs. Login access restoration conflict → `BLOCK`
-7. **Case 7:** Access restoration with missing state fact → `BLOCK`
-8. **Case 8:** Refund attempt under active `ACCOUNT_RESTRICTED` flag → `BLOCK`
-9. **Case 9:** State-dependent refund (Unverified identity state) → `BLOCK`
-10. **Case 10:** State-dependent refund (Verified identity state) → `ALLOW`
-
----
-
-## 4. Technology Stack Decisions
+## 3. Technology Stack Decisions
 
 - **Language:** Python 3.12+ (type safety, modern Pydantic v2 support, performance).
 - **Web Framework:** FastAPI (async endpoints, OpenAPI spec integration, fast execution).
 - **Data Validation & Schemas:** Pydantic v2 (strict validation, fast serialization).
-- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, and validation engine.
-
----
-
-## 5. Known Limitations & MVP Scope Boundaries
-
-- **Mock Agents:** Domain agents are currently deterministic mock classes used to simulate multi-agent proposals without LLM latency or cost.
-- **No Live CRM / Third-Party Integrations:** Production Salesforce/Zendesk APIs are mocked via localized Python interfaces.
-- **Deterministic Pipeline:** LLM calls are strictly isolated from the core compiler and validation engine to maintain 100% testability and reproducibility.
+- **Testing:** `pytest` for deterministic, offline testing of domain models, compiler, intake engine, and validation engine.
