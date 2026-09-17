@@ -1,9 +1,12 @@
 """Evaluation Harness Runner Executing Benchmark Datasets across Systems."""
 
 import json
+import logging
 from pathlib import Path
+import time
 from typing import Dict, List, Optional, Union
 
+from mosaic.config.settings import settings
 from mosaic.evaluation.baselines import (
     BaselineASingleIntentSystem,
     BaselineBDirectMultiAgentSystem,
@@ -18,6 +21,53 @@ from mosaic.evaluation.models import (
     EvaluationReport,
     EvaluationSystemResult,
 )
+from mosaic.llm.base import BaseLLMProvider
+from mosaic.llm.models import LLMRequest, LLMResponse
+
+logger = logging.getLogger("mosaic.evaluation.runner")
+
+
+class EvaluationRateLimitedProvider(BaseLLMProvider):
+    """Evaluation-only wrapper around BaseLLMProvider enforcing a minimum interval between requests."""
+
+    def __init__(
+        self,
+        provider: BaseLLMProvider,
+        min_interval_seconds: float = settings.GEMINI_EVAL_MIN_INTERVAL_SECONDS,
+        time_func=time.time,
+        sleep_func=time.sleep,
+    ) -> None:
+        self.provider = provider
+        self.min_interval_seconds = min_interval_seconds
+        self._time_func = time_func
+        self._sleep_func = sleep_func
+        self._last_request_time: Optional[float] = None
+
+    @property
+    def provider_name(self) -> str:
+        return self.provider.provider_name
+
+    @property
+    def model_name(self) -> str:
+        return self.provider.model_name
+
+    def generate(self, request: LLMRequest) -> LLMResponse:
+        """Throttles generate requests ensuring min_interval_seconds between consecutive calls."""
+        now = self._time_func()
+        if self._last_request_time is not None:
+            elapsed = now - self._last_request_time
+            if elapsed < self.min_interval_seconds:
+                sleep_duration = self.min_interval_seconds - elapsed
+                logger.info(
+                    "Evaluation rate limit pacing: sleeping %.2fs (min_interval=%.2fs)",
+                    sleep_duration,
+                    self.min_interval_seconds,
+                )
+                self._sleep_func(sleep_duration)
+
+        # Record timestamp immediately before executing request
+        self._last_request_time = self._time_func()
+        return self.provider.generate(request)
 
 
 class EvaluationRunner:
@@ -91,6 +141,7 @@ def main() -> None:
     from mosaic.compiler.llm_compiler import LLMActionCompiler
     from mosaic.intake.llm_decomposer import LLMIntentDecomposer
     from mosaic.llm.factory import LLMProviderFactory
+    from mosaic.orchestrator import MosaicOrchestrator
 
     parser = argparse.ArgumentParser(description="MOSAIC Research Benchmark Evaluation Runner")
     parser.add_argument("--provider", type=str, default="mock", choices=["mock", "ollama", "gemini"], help="LLM Provider type")
@@ -132,7 +183,11 @@ def main() -> None:
     elif provider_name == "gemini":
         model_name = args.model or "gemini-2.5-flash"
         try:
-            llm_p = LLMProviderFactory.get_provider("gemini", model_name=model_name)
+            raw_llm_p = LLMProviderFactory.get_provider("gemini", model_name=model_name)
+            llm_p = EvaluationRateLimitedProvider(
+                provider=raw_llm_p,
+                min_interval_seconds=settings.GEMINI_EVAL_MIN_INTERVAL_SECONDS,
+            )
         except Exception as e:
             print(f"CRITICAL ERROR: Failed to initialize Gemini provider: {e}", file=sys.stderr)
             sys.exit(1)
@@ -142,7 +197,7 @@ def main() -> None:
         systems = [
             BaselineASingleIntentSystem(intake_engine=decomposer, compiler=compiler),
             BaselineBDirectMultiAgentSystem(intake_engine=decomposer, compiler=compiler),
-            MosaicResearchSystem(orchestrator=MosaicOrchestrator(intake_engine=decomposer, action_compiler=compiler)),
+            MosaicResearchSystem(orchestrator=MosaicOrchestrator(intake_engine=decomposer, compiler=compiler)),
         ]
     else:
         model_name = args.model or "mock-deterministic-v1"

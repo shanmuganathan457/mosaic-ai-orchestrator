@@ -78,7 +78,20 @@ class GeminiProvider(BaseLLMProvider):
         # Configure structured JSON output if schema requested
         if request.structured_schema is not None:
             config_kwargs["response_mime_type"] = "application/json"
-            config_kwargs["response_schema"] = request.structured_schema
+            schema = request.structured_schema
+            if isinstance(schema, dict):
+                import json
+                def _clean_schema(s: Any) -> Any:
+                    if isinstance(s, dict):
+                        s.pop("additionalProperties", None)
+                        for v in s.values():
+                            _clean_schema(v)
+                    elif isinstance(s, list):
+                        for item in s:
+                            _clean_schema(item)
+                    return s
+                schema = _clean_schema(json.loads(json.dumps(schema)))
+            config_kwargs["response_schema"] = schema
 
         config = types.GenerateContentConfig(**config_kwargs)
 

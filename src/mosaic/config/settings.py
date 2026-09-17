@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_EVAL_MIN_INTERVAL_SECONDS: float = 13.0
     LLM_TIMEOUT: float = 60.0
     LLM_ENABLED: bool = False
     
