@@ -53,10 +53,16 @@ class LLMProviderFactory:
             if m_name == "mock-deterministic-v1":
                 m_name = "llama3.2"
             return OllamaProvider(base_url=base_url, model_name=m_name, timeout=timeout)
+        elif p_name == "gemini":
+            api_key = kwargs.pop("api_key", settings.GEMINI_API_KEY)
+            if m_name == "mock-deterministic-v1":
+                m_name = settings.GEMINI_MODEL or "gemini-2.5-flash"
+            from mosaic.llm.gemini import GeminiProvider
+            return GeminiProvider(api_key=api_key, model_name=m_name, **kwargs)
         elif p_name in cls._registry:
             return cls._registry[p_name](model_name=m_name, **kwargs)
         else:
-            supported = ["mock", "ollama"] + list(cls._registry.keys())
+            supported = ["mock", "ollama", "gemini"] + list(cls._registry.keys())
             raise LLMConfigurationError(
                 f"Unsupported LLM provider '{p_name}'. Supported providers: {supported}"
             )

@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = "mock"
     LLM_MODEL: str = "mock-deterministic-v1"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
     LLM_TIMEOUT: float = 60.0
     LLM_ENABLED: bool = False
     

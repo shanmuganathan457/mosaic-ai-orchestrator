@@ -10,12 +10,14 @@ from mosaic.llm.models import (
     LLMResponse,
     LLMResponseError,
 )
+from mosaic.llm.gemini import GeminiProvider
 from mosaic.llm.ollama import OllamaProvider
 
 __all__ = [
     "BaseLLMProvider",
     "MockLLMProvider",
     "OllamaProvider",
+    "GeminiProvider",
     "LLMProviderFactory",
     "LLMRequest",
     "LLMResponse",

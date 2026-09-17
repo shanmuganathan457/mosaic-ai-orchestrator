@@ -49,6 +49,7 @@ Research requirement: The LLM may propose candidate intents or actions, but **mu
 - [x] Deterministic Intent & Evidence Decomposition Engine (`mosaic.intake.decomposer`)
 - [x] Provider-Agnostic LLM Abstraction Layer & Mock Provider (`mosaic.llm`)
 - [x] Local LLM Provider Integration via Ollama (`mosaic.llm.ollama.OllamaProvider`, `mosaic.llm.factory.LLMProviderFactory`)
+- [x] Cloud LLM Provider Integration via Google Gemini SDK (`mosaic.llm.gemini.GeminiProvider`, `google-genai`)
 - [x] LLM-Backed Intent & Evidence Decomposition Engine (`mosaic.intake.llm_decomposer`)
 - [x] Abstract Action Compiler Strategy (`BaseActionCompiler`)
 - [x] LLM-Backed Structured Semantic Action Compiler (`LLMActionCompiler`)
@@ -58,7 +59,7 @@ Research requirement: The LLM may propose candidate intents or actions, but **mu
 - [x] Research Baseline Implementations (`BaselineASingleIntentSystem`, `BaselineBDirectMultiAgentSystem`)
 - [x] Evaluation Harness Runner, CLI & Metrics (`EvaluationRunner`, `compute_aggregate_metrics`)
 - [x] Strategy-Injectable Pipeline Orchestrator (`MosaicOrchestrator`)
-- [x] 72 passing pytest unit, integration, & benchmark runner tests (`tests/`)
+- [x] 81 passing pytest unit, integration, & benchmark runner tests (`tests/`)
 
 ### Intentionally NOT Yet Implemented
 - [ ] Response Synthesis & Real System Execution (Phase 8)

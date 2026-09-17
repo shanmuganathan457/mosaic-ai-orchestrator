@@ -1,7 +1,7 @@
 # MOSAIC Architecture & Technical Specifications
 
 **Multi-Intent Orchestration & State-Aware Intelligent Coordination**  
-*Version 0.9.0 — Phase 7B Natural-Language LLM Evaluation Specifications*
+*Version 1.0.0 — Phase 7C Google Gemini LLM Provider Integration Specifications*
 
 ---
 
@@ -27,7 +27,7 @@ The architecture supports interchangeable intake strategies (`BaseIntentDecompos
                   │                                   │
                   ▼                                   ▼
     DeterministicIntentDecomposer           LLMIntentDecomposer
-    (Pattern-matching baseline)             (BaseLLMProvider: Mock / Ollama)
+    (Pattern-matching baseline)             (BaseLLMProvider: Mock / Ollama / Gemini)
                   │                                   │
                   └─────────────────┬─────────────────┘
                                     │ [Integrity Checked: Enum + Evidence + Metadata]

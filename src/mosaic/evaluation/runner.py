@@ -93,7 +93,7 @@ def main() -> None:
     from mosaic.llm.factory import LLMProviderFactory
 
     parser = argparse.ArgumentParser(description="MOSAIC Research Benchmark Evaluation Runner")
-    parser.add_argument("--provider", type=str, default="mock", choices=["mock", "ollama"], help="LLM Provider type")
+    parser.add_argument("--provider", type=str, default="mock", choices=["mock", "ollama", "gemini"], help="LLM Provider type")
     parser.add_argument("--model", type=str, default=None, help="Model name identifier")
     parser.add_argument("--dataset", type=str, default="v1_natural_language", choices=["v1", "v1_natural_language"], help="Benchmark dataset version")
     parser.add_argument("--output", type=str, default=None, help="Output JSON path")
@@ -122,6 +122,21 @@ def main() -> None:
 
         model_name = args.model or "llama3.2"
         llm_p = LLMProviderFactory.get_provider("ollama", model_name=model_name)
+        decomposer = LLMIntentDecomposer(llm_provider=llm_p)
+        compiler = LLMActionCompiler(llm_provider=llm_p)
+        systems = [
+            BaselineASingleIntentSystem(intake_engine=decomposer, compiler=compiler),
+            BaselineBDirectMultiAgentSystem(intake_engine=decomposer, compiler=compiler),
+            MosaicResearchSystem(orchestrator=MosaicOrchestrator(intake_engine=decomposer, action_compiler=compiler)),
+        ]
+    elif provider_name == "gemini":
+        model_name = args.model or "gemini-2.5-flash"
+        try:
+            llm_p = LLMProviderFactory.get_provider("gemini", model_name=model_name)
+        except Exception as e:
+            print(f"CRITICAL ERROR: Failed to initialize Gemini provider: {e}", file=sys.stderr)
+            sys.exit(1)
+
         decomposer = LLMIntentDecomposer(llm_provider=llm_p)
         compiler = LLMActionCompiler(llm_provider=llm_p)
         systems = [

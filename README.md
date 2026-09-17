@@ -47,16 +47,42 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
   - Baselines: Baseline A (Single-Intent Route), Baseline B (Direct Multi-Agent Synthesis without Validation), MOSAIC (State Validation)
   - Reusable evaluation harness: `EvaluationRunner` producing machine-readable `evaluation_results.json` reports
   - Objective research metrics: Verdict Accuracy, Micro-Aggregated Intent Precision/Recall/F1, Conflict Precision/Recall/F1, Escalation Precision, False Escalation Rate
-- [x] **Phase 7A: Local LLM Provider Integration (Ollama)** (`src/mosaic/llm/ollama.py`, `src/mosaic/llm/factory.py`)
-  - Local HTTP-based Ollama provider (`OllamaProvider`) conforming to `BaseLLMProvider` using zero external framework dependencies (`urllib.request`).
-  - Provider Factory (`LLMProviderFactory`) for runtime resolution of `mock` and `ollama` providers.
-- [x] **Phase 7B: Natural-Language LLM Evaluation** (`tests/fixtures/research_dataset/v1_natural_language/`, `src/mosaic/evaluation/`)
-  - Synthetic Natural Language Benchmark Dataset (`v1_natural_language`): 39 natural-language variants referencing authoritative `source_case_id` ground truth.
-  - Action-level metrics: Action Coverage, Unexpected Action Rate.
-  - Root Cause Error Attribution Taxonomy: `CORRECT_ALL`, `INCORRECT_INTENT_EXTRACTION`, `INCORRECT_ACTION_COMPILATION`, `INCORRECT_VALIDATION_RESULT`, `INCORRECT_FINAL_INTERPRETATION`.
-  - Reusable CLI Entry Point (`python -c "import sys; sys.path.insert(0, 'src'); from mosaic.evaluation.runner import main; main()" --provider mock --dataset v1_natural_language`).
-  - Serialized evaluation reports output to `evaluation_results/phase_7b/<model>/`.
-  - 72 passing unit/integration tests + 1 optional live Ollama skipped test (`tests/`).
+- [x] **Phase 7C: Google Gemini LLM Provider Integration** (`src/mosaic/llm/gemini.py`)
+  - Cloud LLM provider (`GeminiProvider`) using official `google-genai` Python SDK (`from google import genai`).
+  - Provider Factory (`LLMProviderFactory`) support for `mock`, `ollama`, and `gemini`.
+  - Structured output schema generation (`response_mime_type="application/json"`).
+  - Preserved 100% offline default execution (Mock mode) and deterministic validation boundary.
+  - 81 passing unit/integration tests + 2 optional skipped live tests (`tests/test_gemini_provider.py`).
+
+---
+
+## 4. Supported LLM Providers
+
+MOSAIC supports provider-agnostic execution across three provider strategies via `LLMProviderFactory`:
+
+1. **`mock` (MockLLMProvider):**
+   Deterministic, 100% offline execution for unit testing, offline CI/CD, and pipeline verification without GPU or network access.
+2. **`ollama` (OllamaProvider):**
+   Local HTTP REST execution via Ollama daemon (`http://localhost:11434`) for offline local model evaluation (`llama3.2`, `qwen2.5`).
+3. **`gemini` (GeminiProvider):**
+   Cloud LLM evaluation via official Google GenAI SDK (`google-genai`).
+
+### Setting Up Gemini Provider:
+
+1. Create a `.env` file (or copy `.env.example`):
+   ```bash
+   cp .env.example .env
+   ```
+2. Set your Gemini API key and desired model in `.env`:
+   ```env
+   GEMINI_API_KEY=your_actual_api_key_here
+   GEMINI_MODEL=gemini-2.5-flash
+   LLM_PROVIDER=gemini
+   ```
+3. Execute evaluation harness with Gemini provider:
+   ```bash
+   python -c "import sys; sys.path.insert(0, 'src'); from mosaic.evaluation.runner import main; main()" --provider gemini --model gemini-2.5-flash --dataset v1_natural_language
+   ```
 
 ---
 
