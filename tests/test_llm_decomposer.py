@@ -127,6 +127,73 @@ def test_llm_intent_decomposer_schema_validation_error():
         decomposer.decompose_message("Test message")
 
 
+# ==========================================
+# QUALITY CORRECTION TESTS
+# ==========================================
+
+def test_llm_intent_decomposer_invalid_intent_category_rejection():
+    """CORRECTION 1: Verify LLMIntentDecomposer raises LLMResponseError on unsupported IntentCategory."""
+    invalid_category_payload = {
+        "intents": [
+            {
+                "category": "UNSUPPORTED_UNKNOWN_CATEGORY",
+                "intent_name": "refund_payment",
+                "verbatim_text": "refund",
+                "confidence": 0.9
+            }
+        ]
+    }
+    provider = MockLLMProvider(fixed_structured_output=invalid_category_payload)
+    decomposer = LLMIntentDecomposer(llm_provider=provider)
+
+    with pytest.raises(LLMResponseError, match="Invalid IntentCategory"):
+        decomposer.decompose_message("Please refund my money.")
+
+
+def test_llm_intent_decomposer_evidence_traceability_rejection():
+    """CORRECTION 2: Verify LLMIntentDecomposer raises LLMResponseError on untraceable/hallucinated verbatim_text."""
+    hallucinated_evidence_payload = {
+        "intents": [
+            {
+                "category": "BILLING",
+                "intent_name": "refund_payment",
+                "verbatim_text": "text not present in message at all",
+                "confidence": 0.95
+            }
+        ]
+    }
+    provider = MockLLMProvider(fixed_structured_output=hallucinated_evidence_payload)
+    decomposer = LLMIntentDecomposer(llm_provider=provider)
+
+    with pytest.raises(LLMResponseError, match="Evidence integrity error"):
+        decomposer.decompose_message("Please refund my money.")
+
+
+def test_llm_intent_decomposer_absent_metadata_non_fabrication():
+    """CORRECTION 3: Verify LLMIntentDecomposer does not fabricate entity IDs if absent in customer text."""
+    payload_without_ids = {
+        "intents": [
+            {
+                "category": "BILLING",
+                "intent_name": "refund_payment",
+                "verbatim_text": "refund my money",
+                "confidence": 0.95,
+                "metadata": {}
+            }
+        ]
+    }
+    provider = MockLLMProvider(fixed_structured_output=payload_without_ids)
+    decomposer = LLMIntentDecomposer(llm_provider=provider)
+
+    raw_message = "Please refund my money."
+    spans = decomposer.decompose_message(raw_message)
+
+    assert len(spans) == 1
+    assert "payment_id" not in spans[0].metadata
+    assert "account_id" not in spans[0].metadata
+    assert "subscription_id" not in spans[0].metadata
+
+
 def test_orchestrator_comparability_strategy_injection():
     """Verify Orchestrator accepts both Deterministic and LLM Decomposers yielding identical downstream pipeline flow."""
     mock_payload = {

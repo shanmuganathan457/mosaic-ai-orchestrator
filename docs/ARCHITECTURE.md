@@ -1,7 +1,7 @@
 # MOSAIC Architecture & Technical Specifications
 
 **Multi-Intent Orchestration & State-Aware Intelligent Coordination**  
-*Version 0.6.0 — Phase 5B Architecture & LLM Intent Decomposition Specifications*
+*Version 0.6.1 — Phase 5B Architecture & Output Integrity Specifications*
 
 ---
 
@@ -16,9 +16,9 @@ MOSAIC introduces a **deterministic, inspectable, state-dependent Validation Eng
 
 ---
 
-## 2. System Architecture & Intake Strategy Pattern
+## 2. System Architecture & Output Integrity Enforcement
 
-The architecture supports interchangeable intake strategies (`BaseIntentDecomposer`), allowing direct experimental comparison between Rule-Based Deterministic Extraction and LLM-Backed Intent Extraction.
+The architecture supports interchangeable intake strategies (`BaseIntentDecomposer`), allowing direct experimental comparison between Rule-Based Deterministic Extraction and LLM-Backed Intent Extraction with strict boundary output integrity.
 
 ```
                       Customer Email / Raw Message
@@ -30,7 +30,7 @@ The architecture supports interchangeable intake strategies (`BaseIntentDecompos
     (Pattern-matching baseline)             (LLMProvider abstraction)
                   │                                   │
                   └─────────────────┬─────────────────┘
-                                    │
+                                    │ [Integrity Checked: Enum + Evidence + Metadata]
                                     ▼
                                IntentSpan[]
                                     │
@@ -57,13 +57,10 @@ The architecture supports interchangeable intake strategies (`BaseIntentDecompos
                           ALLOW   BLOCK  ESCALATE
 ```
 
-### Component Responsibilities & LLM Boundaries
-
-1. **Intake Strategy Boundary (`BaseIntentDecomposer`):** Strategy interface for intent extraction. Guarantees that both `IntentDecompositionEngine` (rule-based) and `LLMIntentDecomposer` (LLM-backed) output identical `IntentSpan[]` representations.
-2. **LLM Intent Decomposer (`LLMIntentDecomposer`):** Uses `BaseLLMProvider` to extract intents, verbatim evidence spans, and confidence scores. Uses strict Pydantic boundary schemas (`ExtractedIntentsPayload`) to validate output formatting. **The LLM is strictly prohibited from making validation decisions (`ALLOW`, `BLOCK`, `ESCALATE`).**
-3. **Specialized Domain Agents (`mosaic.agents`):** Domain-specific worker agents (Security, Billing, Subscription, Access) producing unvalidated candidate `AgentProposal` payloads based on assigned subtasks.
-4. **Semantic State Compiler (`mosaic.compiler`):** Formats natural language / semi-structured proposals into strongly-typed `Action` primitives. Performs zero validation decision making.
-5. **Deterministic Validation Engine (`mosaic.validation`):** Evaluates structured actions against current `CaseState`, `Dependency` graphs, and `PolicyRule`s strictly deterministically **without invoking an LLM**.
+### Output Integrity Principles (Phase 5B Quality Correction)
+1. **Invalid Intent Category Handling:** If the LLM returns an unsupported or invalid `IntentCategory`, `LLMIntentDecomposer` raises an explicit `LLMResponseError`. Invalid model predictions are **never** silently repaired or defaulted to valid intents (e.g., `GENERAL_INQUIRY`).
+2. **Evidence Traceability:** All extracted `verbatim_text` evidence spans must be strictly traceable to verbatim text in the customer message. Untraceable or hallucinated evidence spans raise an explicit `LLMResponseError`.
+3. **Metadata Non-Fabrication:** The LLM prompt and decomposer enforce that entity identifiers (`payment_id`, `account_id`, `subscription_id`) are not fabricated if absent from customer text.
 
 ---
 

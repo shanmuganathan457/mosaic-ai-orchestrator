@@ -26,7 +26,8 @@ Follow these strict rules:
 3. Extract exact verbatim evidence spans from the customer text.
 4. Assign an appropriate IntentCategory (SECURITY, BILLING, SUBSCRIPTION, ACCESS_RESTORATION, TECHNICAL_SUPPORT, GENERAL_INQUIRY).
 5. Provide a confidence score between 0.0 and 1.0.
-6. Do NOT evaluate business policy rules or validation safety (DO NOT output ALLOW, BLOCK, or ESCALATE).
+6. Do NOT invent entity identifiers (payment_id, account_id, subscription_id) not present in the customer message.
+7. Do NOT evaluate business policy rules or validation safety (DO NOT output ALLOW, BLOCK, or ESCALATE).
 
 Return ONLY valid JSON matching the requested schema.
 """
@@ -55,9 +56,11 @@ class LLMIntentDecomposer(BaseIntentDecomposer):
         self,
         llm_provider: BaseLLMProvider,
         system_prompt: str = INTENT_EXTRACTION_SYSTEM_PROMPT,
+        enforce_verbatim_traceability: bool = True,
     ) -> None:
         self.llm_provider = llm_provider
         self.system_prompt = system_prompt
+        self.enforce_verbatim_traceability = enforce_verbatim_traceability
 
     def decompose_message(self, raw_message: str) -> List[IntentSpan]:
         """Parses raw customer text via LLM provider into validated IntentSpan objects."""
@@ -99,22 +102,31 @@ class LLMIntentDecomposer(BaseIntentDecomposer):
             logger.error("Pydantic validation failed for LLM structured intent payload: %s", str(e))
             raise LLMResponseError(f"Structured output schema validation failed: {str(e)}") from e
 
-        # Map parsed Pydantic items to domain IntentSpan objects
+        # Map parsed Pydantic items to domain IntentSpan objects with integrity validation
         spans: List[IntentSpan] = []
         for item in payload.intents:
+            # 1. Enforce strict IntentCategory enum validation (DO NOT SILENTLY DEFAULT)
             category_str = item.category.upper()
             try:
                 category_enum = IntentCategory(category_str)
             except ValueError:
-                logger.warning("Unknown IntentCategory '%s' returned by LLM. Defaulting to GENERAL_INQUIRY.", item.category)
-                category_enum = IntentCategory.GENERAL_INQUIRY
+                logger.error("LLM returned unsupported/invalid IntentCategory '%s'.", item.category)
+                raise LLMResponseError(
+                    f"Invalid IntentCategory '{item.category}' returned by LLM. Must be one of {[c.value for c in IntentCategory]}."
+                )
 
-            start_char = 0
-            end_char = len(item.verbatim_text)
+            # 2. Evidence Integrity: Verify verbatim_text exists in raw_message
             match = re.search(re.escape(item.verbatim_text), raw_message, re.IGNORECASE)
-            if match:
-                start_char, end_char = match.span()
+            if not match and self.enforce_verbatim_traceability:
+                logger.error("LLM returned hallucinated verbatim_text '%s' not present in raw message.", item.verbatim_text)
+                raise LLMResponseError(
+                    f"Evidence integrity error: verbatim_text '{item.verbatim_text}' is not traceable to customer message."
+                )
 
+            start_char = match.start() if match else 0
+            end_char = match.end() if match else len(item.verbatim_text)
+
+            # 3. Metadata Provenance: Preserve metadata while deriving explicit IDs from verbatim text if available
             metadata = dict(item.metadata)
             pay_match = re.search(r"pay_\w+", raw_message, re.IGNORECASE)
             if pay_match and "payment_id" not in metadata:

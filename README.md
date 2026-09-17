@@ -39,11 +39,12 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 - [x] **Phase 3: Semantic State Compiler & Mock Domain Agents** (`src/mosaic/compiler/`, `src/mosaic/agents/`)
 - [x] **Phase 4: Deterministic Intent Decomposition Engine & End-to-End Orchestrator** (`src/mosaic/intake/`, `src/mosaic/orchestrator.py`)
 - [x] **Phase 5A: Provider-Agnostic LLM Abstraction Layer & Deterministic Mock LLM** (`src/mosaic/llm/`)
-- [x] **Phase 5B: LLM-Backed Intent Decomposition Engine** (`src/mosaic/intake/llm_decomposer.py`)
+- [x] **Phase 5B: LLM-Backed Intent Decomposition Engine & Output Integrity Correction** (`src/mosaic/intake/llm_decomposer.py`)
   - Interchangeable Strategy: `BaseIntentDecomposer` (`decomposer.py`)
   - Structured output boundary validation via Pydantic (`LLMIntentDecomposer`)
+  - Output Integrity: Strict enum validation, evidence traceability checking, and metadata non-fabrication
   - Strategy comparability between Deterministic vs. LLM Intake in `MosaicOrchestrator`
-  - 40 passing pytest unit & pipeline tests (`tests/`)
+  - 43 passing pytest unit & pipeline tests (`tests/`)
 
 ---
 
@@ -173,7 +174,7 @@ mosaic-ai-orchestrator/
    pip install -e ".[dev]"
    ```
 
-4. **Run Complete Pytest Suite (40 Tests):**
+4. **Run Complete Pytest Suite (43 Tests):**
    ```bash
    python -m pytest
    ```
