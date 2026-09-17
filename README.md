@@ -40,11 +40,13 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 - [x] **Phase 4: Deterministic Intent Decomposition Engine & End-to-End Orchestrator** (`src/mosaic/intake/`, `src/mosaic/orchestrator.py`)
 - [x] **Phase 5A: Provider-Agnostic LLM Abstraction Layer & Deterministic Mock LLM** (`src/mosaic/llm/`)
 - [x] **Phase 5B: LLM-Backed Intent Decomposition Engine & Output Integrity Correction** (`src/mosaic/intake/llm_decomposer.py`)
-  - Interchangeable Strategy: `BaseIntentDecomposer` (`decomposer.py`)
-  - Structured output boundary validation via Pydantic (`LLMIntentDecomposer`)
-  - Output Integrity: Strict enum validation, evidence traceability checking, and metadata non-fabrication
-  - Strategy comparability between Deterministic vs. LLM Intake in `MosaicOrchestrator`
-  - 43 passing pytest unit & pipeline tests (`tests/`)
+- [x] **Phase 5C: Structured Semantic Action Compilation** (`src/mosaic/compiler/llm_compiler.py`)
+  - Abstract Compiler Strategy: `BaseActionCompiler` (`state_compiler.py`)
+  - Deterministic Baseline: `SemanticStateCompiler` preserved as research baseline
+  - LLM Compiler: `LLMActionCompiler` using provider-agnostic `BaseLLMProvider`
+  - Strongly-Typed Boundary Schema: `ExtractedActionPayload` with strict error handling (`SemanticCompilerError`)
+  - Traceability: `proposal_id` preserved across AgentProposal -> Action transformation
+  - 51 passing pytest unit, integration, & cross-action pipeline tests (`tests/`)
 
 ---
 

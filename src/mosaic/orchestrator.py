@@ -15,7 +15,7 @@ from mosaic.agents import (
     SecurityMockAgent,
     SubscriptionMockAgent,
 )
-from mosaic.compiler import SemanticStateCompiler
+from mosaic.compiler import BaseActionCompiler, SemanticStateCompiler
 from mosaic.domain.models import (
     Action,
     Case,
@@ -35,7 +35,7 @@ class MosaicOrchestrator:
     def __init__(
         self,
         intake_engine: BaseIntentDecomposer | None = None,
-        compiler: SemanticStateCompiler | None = None,
+        compiler: BaseActionCompiler | None = None,
         validation_engine: DefaultValidationEngine | None = None,
         agent_registry: Dict[str, BaseMockAgent] | None = None,
     ) -> None:

@@ -8,6 +8,7 @@ The compiler strictly performs translation/formatting and does NOT determine
 final validation verdicts (ALLOW, BLOCK, ESCALATE).
 """
 
+from abc import ABC, abstractmethod
 import logging
 from typing import Any, Dict, List
 from uuid import UUID
@@ -30,21 +31,20 @@ class SemanticCompilerError(Exception):
     pass
 
 
-class SemanticStateCompiler:
-    """Compiles natural language / semi-structured AgentProposals into structured Action objects."""
+class BaseActionCompiler(ABC):
+    """Abstract Strategy interface for semantic action compilers."""
+
+    @abstractmethod
+    def compile_proposal(self, proposal: AgentProposal) -> Action:
+        """Translates an AgentProposal into a strongly-typed Action primitive."""
+        pass
+
+
+class SemanticStateCompiler(BaseActionCompiler):
+    """Compiles natural language / semi-structured AgentProposals into structured Action objects (Deterministic Baseline)."""
 
     def compile_proposal(self, proposal: AgentProposal) -> Action:
-        """Translates an AgentProposal into a strongly-typed Action.
-
-        Args:
-            proposal: Unvalidated output payload from a domain worker agent.
-
-        Returns:
-            Structured Action primitive containing preconditions, postconditions, and dependencies.
-
-        Raises:
-            SemanticCompilerError: If required fields in raw_action_payload are missing or malformed.
-        """
+        """Translates an AgentProposal into a strongly-typed Action."""
         logger.debug("Compiling AgentProposal id=%s from agent=%s", proposal.id, proposal.agent_name)
         payload = proposal.raw_action_payload
 
@@ -87,7 +87,7 @@ class SemanticStateCompiler:
 
         # Parse Dependencies
         dependencies: List[Dependency] = []
-        raw_dependencies = payload.get("dependencies", [])
+        raw_dependencies = payload.get("parameters", {}).get("dependencies", payload.get("dependencies", []))
         for d in raw_dependencies:
             failure_str = str(d.get("failure_outcome", "BLOCK")).upper()
             try:

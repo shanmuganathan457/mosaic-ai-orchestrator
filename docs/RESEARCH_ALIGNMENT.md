@@ -15,7 +15,9 @@ This document maps software components in the **MOSAIC** codebase to the researc
 | **Deterministic Research Mock LLM** | `mosaic.llm.mock.MockLLMProvider` | Provides a 100% offline, reproducible mock provider for research benchmarking without API/GPU costs. |
 | **Case & Sub-Task Tracking** | `mosaic.domain.models.schemas` (`Case`, `SubTask`, `CaseState`) | Maintains state records, current facts, active flags, and completed action graphs for multi-intent customer communications. |
 | **Agent Action Proposals** | `mosaic.agents.mock_agents` | Deterministic mock worker agents generating `AgentProposal` objects. |
-| **Semantic Action Compilation** | `mosaic.compiler.state_compiler.SemanticStateCompiler` | Translates natural language proposals into structured, machine-checkable `Action` primitives with explicit state requirements. |
+| **Semantic Action Compilation Strategy** | `mosaic.compiler.state_compiler.BaseActionCompiler` | Abstract Strategy interface ensuring interchangeable semantic action compilers feeding identical downstream `Action[]` primitives. |
+| **Deterministic Action Compiler Baseline** | `mosaic.compiler.state_compiler.SemanticStateCompiler` | Rule-based baseline compiler converting proposals into structured actions for empirical comparability. |
+| **LLM-Backed Action Compiler** | `mosaic.compiler.llm_compiler.LLMActionCompiler` | Structured LLM-backed compiler transforming agent proposals into validated domain `Action` objects via `BaseLLMProvider`. |
 | **State & Policy Validation** | `mosaic.validation.engine.DefaultValidationEngine` | Evaluates structured actions against case facts, preconditions, postconditions, and business constraints deterministically without calling an LLM. |
 | **End-to-End Pipeline Coordination** | `mosaic.orchestrator.MosaicOrchestrator` | Coordinates raw text intake, mock agent execution, state compilation, and validation evaluation. |
 
@@ -26,11 +28,13 @@ This document maps software components in the **MOSAIC** codebase to the researc
 ### 2.1 Strategy Comparability (Deterministic vs. LLM)
 Research requirement: Evaluate LLM perception accuracy against deterministic baselines without altering downstream validation.
 - Both `IntentDecompositionEngine` and `LLMIntentDecomposer` implement `BaseIntentDecomposer`.
-- Both yield identical `IntentSpan[]` and `SubTask[]` objects fed into domain agents and the `DefaultValidationEngine`.
+- Both `SemanticStateCompiler` and `LLMActionCompiler` implement `BaseActionCompiler`.
+- Both yield identical `IntentSpan[]`, `SubTask[]`, and `Action[]` objects fed into domain agents and the `DefaultValidationEngine`.
 
 ### 2.2 LLM Perception vs. Validation Decoupling
 Research requirement: The LLM may propose candidate intents or actions, but **must never make the final safety or validation decision**.
 - The `LLMIntentDecomposer` is restricted to intent, verbatim evidence, and confidence extraction.
+- The `LLMActionCompiler` is restricted to structured semantic action parameter and condition extraction.
 - The `DefaultValidationEngine` in `mosaic.validation` remains 100% deterministic and LLM-independent.
 
 ---
@@ -45,10 +49,12 @@ Research requirement: The LLM may propose candidate intents or actions, but **mu
 - [x] Deterministic Intent & Evidence Decomposition Engine (`mosaic.intake.decomposer`)
 - [x] Provider-Agnostic LLM Abstraction Layer & Mock Provider (`mosaic.llm`)
 - [x] LLM-Backed Intent & Evidence Decomposition Engine (`mosaic.intake.llm_decomposer`)
+- [x] Abstract Action Compiler Strategy (`BaseActionCompiler`)
+- [x] LLM-Backed Structured Semantic Action Compiler (`LLMActionCompiler`)
 - [x] Strategy-Injectable Pipeline Orchestrator (`MosaicOrchestrator`)
-- [x] 40 passing pytest unit & end-to-end pipeline tests (`tests/`)
+- [x] 51 passing pytest unit & end-to-end pipeline tests (`tests/`)
 
 ### Intentionally NOT Yet Implemented
-- [ ] Structured-Output Validation for Actions (Phase 5C)
 - [ ] LLM -> MOSAIC Pipeline Integration with Live Providers (Phase 5D)
+- [ ] Fallback Strategy Engine (Phase 5E)
 - [ ] Frontend Dashboard / UI
