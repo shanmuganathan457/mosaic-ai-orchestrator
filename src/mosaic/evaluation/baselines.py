@@ -97,6 +97,11 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
             {c.value for c in case.expected_conflicts},
         )
 
+        i_prec, i_rec, i_f1 = compute_precision_recall_f1(
+            set(predicted_intents),
+            set(case.expected_intents),
+        )
+
         return EvaluationSystemResult(
             case_id=case.case_id,
             system_name=self.system_name,
@@ -105,6 +110,9 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
             predicted_verdict=predicted_verdict,
             expected_verdict=case.expected_final_verdict,
             verdict_correct=(predicted_verdict == case.expected_final_verdict),
+            intent_precision=i_prec,
+            intent_recall=i_rec,
+            intent_f1=i_f1,
             detected_conflicts=detected_conflicts,
             expected_conflicts=case.expected_conflicts,
             conflict_precision=prec,
@@ -141,12 +149,7 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
         return "baseline_b_direct_multi_agent"
 
     def evaluate_case(self, case: BenchmarkCase) -> EvaluationSystemResult:
-        case_obj, subtask_mappings = self.intake_engine.create_create_case_from_intake(
-            customer_id="bench_user",
-            raw_message=case.customer_message,
-            initial_facts=case.initial_facts,
-            active_flags=case.active_flags,
-        ) if hasattr(self.intake_engine, "create_create_case_from_intake") else self.intake_engine.create_case_from_intake(
+        case_obj, subtask_mappings = self.intake_engine.create_case_from_intake(
             customer_id="bench_user",
             raw_message=case.customer_message,
             initial_facts=case.initial_facts,
@@ -173,6 +176,11 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
             {c.value for c in case.expected_conflicts},
         )
 
+        i_prec, i_rec, i_f1 = compute_precision_recall_f1(
+            set(predicted_intents),
+            set(case.expected_intents),
+        )
+
         return EvaluationSystemResult(
             case_id=case.case_id,
             system_name=self.system_name,
@@ -181,6 +189,9 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
             predicted_verdict=predicted_verdict,
             expected_verdict=case.expected_final_verdict,
             verdict_correct=(predicted_verdict == case.expected_final_verdict),
+            intent_precision=i_prec,
+            intent_recall=i_rec,
+            intent_f1=i_f1,
             detected_conflicts=detected_conflicts,
             expected_conflicts=case.expected_conflicts,
             conflict_precision=prec,
@@ -208,11 +219,45 @@ class MosaicResearchSystem(BaseResearchSystem):
         return "mosaic_validated"
 
     def evaluate_case(self, case: BenchmarkCase) -> EvaluationSystemResult:
+        from mosaic.domain.models import PolicyRule
+
+        # Define evaluation policies for security/compliance flags
+        eval_policies = [
+            PolicyRule(
+                id="POL_SUSPICIOUS_LOCATION",
+                rule_name="Suspicious Location Escalation",
+                description="Require human escalation when suspicious location login flag is present",
+                action_types=["restore_login_access"],
+                forbidden_active_flags=["SUSPICIOUS_LOCATION_LOGIN"],
+                outcome=ValidationVerdict.ESCALATED,
+                explanation="Location anomaly requires human verification",
+            ),
+            PolicyRule(
+                id="POL_LEGAL_HOLD",
+                rule_name="Legal Hold Escalation",
+                description="Require compliance review on legal hold accounts",
+                action_types=["restore_login_access"],
+                forbidden_active_flags=["PENDING_LEGAL_HOLD"],
+                outcome=ValidationVerdict.ESCALATED,
+                explanation="Legal hold active",
+            ),
+            PolicyRule(
+                id="POL_MANUAL_AUDIT",
+                rule_name="Manual Audit Escalation",
+                description="Require audit review when manual audit flag is present",
+                action_types=["restore_login_access"],
+                forbidden_active_flags=["MANUAL_AUDIT_REQUIRED"],
+                outcome=ValidationVerdict.ESCALATED,
+                explanation="Manual audit required",
+            ),
+        ]
+
         validation_result = self.orchestrator.process_customer_case(
             customer_id="bench_user",
             raw_message=case.customer_message,
             initial_facts=case.initial_facts,
             active_flags=case.active_flags,
+            policies=eval_policies,
         )
 
         # Extract extracted intent names & action types from orchestrator intake
@@ -239,6 +284,11 @@ class MosaicResearchSystem(BaseResearchSystem):
             {c.value for c in case.expected_conflicts},
         )
 
+        i_prec, i_rec, i_f1 = compute_precision_recall_f1(
+            set(predicted_intents),
+            set(case.expected_intents),
+        )
+
         return EvaluationSystemResult(
             case_id=case.case_id,
             system_name=self.system_name,
@@ -247,6 +297,9 @@ class MosaicResearchSystem(BaseResearchSystem):
             predicted_verdict=validation_result.verdict,
             expected_verdict=case.expected_final_verdict,
             verdict_correct=(validation_result.verdict == case.expected_final_verdict),
+            intent_precision=i_prec,
+            intent_recall=i_rec,
+            intent_f1=i_f1,
             detected_conflicts=detected_conflicts,
             expected_conflicts=case.expected_conflicts,
             conflict_precision=prec,

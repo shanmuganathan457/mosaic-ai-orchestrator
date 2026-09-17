@@ -385,5 +385,59 @@
     "expected_conflicts": [],
     "expected_escalation_reason": null,
     "rationale": "Single access restoration request with verified identity."
+  },
+  {
+    "case_id": "case_021",
+    "category": "insufficient_info_escalate",
+    "customer_message": "Please restore login access for account acc_707.",
+    "expected_intents": ["restore_login_access"],
+    "expected_intent_evidence": {
+      "restore_login_access": "restore login access"
+    },
+    "initial_facts": {
+      "account_status": "locked"
+    },
+    "active_flags": ["SUSPICIOUS_LOCATION_LOGIN"],
+    "expected_agent_actions": ["restore_login_access"],
+    "expected_final_verdict": "ESCALATED",
+    "expected_conflicts": ["AMBIGUOUS_EVIDENCE"],
+    "expected_escalation_reason": "Policy constraint requires human escalation when suspicious location login flag is present.",
+    "rationale": "Unresolved security flag requires human review before granting account access."
+  },
+  {
+    "case_id": "case_022",
+    "category": "insufficient_info_escalate",
+    "customer_message": "I am locked out of acc_808 and need immediate access.",
+    "expected_intents": ["restore_login_access"],
+    "expected_intent_evidence": {
+      "restore_login_access": "locked out"
+    },
+    "initial_facts": {
+      "account_status": "locked"
+    },
+    "active_flags": ["PENDING_LEGAL_HOLD"],
+    "expected_agent_actions": ["restore_login_access"],
+    "expected_final_verdict": "ESCALATED",
+    "expected_conflicts": ["AMBIGUOUS_EVIDENCE"],
+    "expected_escalation_reason": "Pending legal hold flag requires compliance officer review.",
+    "rationale": "Legal hold policy requires human compliance officer authorization prior to access restoration."
+  },
+  {
+    "case_id": "case_023",
+    "category": "insufficient_info_escalate",
+    "customer_message": "High-risk transfer request for account acc_909.",
+    "expected_intents": ["restore_login_access"],
+    "expected_intent_evidence": {
+      "restore_login_access": "restore_login_access"
+    },
+    "initial_facts": {
+      "account_status": "locked"
+    },
+    "active_flags": ["MANUAL_AUDIT_REQUIRED"],
+    "expected_agent_actions": ["restore_login_access"],
+    "expected_final_verdict": "ESCALATED",
+    "expected_conflicts": ["AMBIGUOUS_EVIDENCE"],
+    "expected_escalation_reason": "Manual audit required flag present in case state.",
+    "rationale": "Account marked for manual audit cannot be automatically unblocked without human agent review."
   }
 ]

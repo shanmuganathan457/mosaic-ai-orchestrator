@@ -30,6 +30,9 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
         return AggregateMetrics(
             total_cases=0,
             verdict_accuracy=0.0,
+            intent_precision=0.0,
+            intent_recall=0.0,
+            intent_f1=0.0,
             conflict_precision=0.0,
             conflict_recall=0.0,
             conflict_f1=0.0,
@@ -40,6 +43,25 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
     # Verdict Accuracy
     correct_verdicts = sum(1 for r in results if r.verdict_correct)
     verdict_accuracy = round(correct_verdicts / total_cases, 4)
+
+    # Overall Micro-Aggregated Intent Precision, Recall, F1 across dataset
+    case_map = {c.case_id: c for c in benchmark_cases}
+    total_predicted_intents: Set[Tuple[str, str]] = set()
+    total_expected_intents: Set[Tuple[str, str]] = set()
+
+    for r in results:
+        for i_name in r.predicted_intents:
+            total_predicted_intents.add((r.case_id, i_name))
+
+        bench_case = case_map.get(r.case_id)
+        if bench_case:
+            for exp_intent in bench_case.expected_intents:
+                total_expected_intents.add((r.case_id, exp_intent))
+
+    intent_prec, intent_rec, intent_f1 = compute_precision_recall_f1(
+        {f"{cid}:{i}" for cid, i in total_predicted_intents},
+        {f"{cid}:{i}" for cid, i in total_expected_intents},
+    )
 
     # Overall Conflict Precision, Recall, F1
     total_predicted_conflicts: Set[Tuple[str, str]] = set()
@@ -76,6 +98,9 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
     return AggregateMetrics(
         total_cases=total_cases,
         verdict_accuracy=verdict_accuracy,
+        intent_precision=intent_prec,
+        intent_recall=intent_rec,
+        intent_f1=intent_f1,
         conflict_precision=prec,
         conflict_recall=rec,
         conflict_f1=f1,

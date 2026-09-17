@@ -136,9 +136,14 @@ class PolicyEvaluator:
             # Check forbidden active flags (e.g., ACCOUNT_RESTRICTED)
             for flag in policy.forbidden_active_flags:
                 if flag in case_state.active_flags:
+                    conflict_type = (
+                        ConflictType.AMBIGUOUS_EVIDENCE
+                        if policy.outcome == ValidationVerdict.ESCALATED
+                        else ConflictType.POLICY_CONSTRAINT_VIOLATION
+                    )
                     conflicts.append(
                         Conflict(
-                            conflict_type=ConflictType.POLICY_CONSTRAINT_VIOLATION,
+                            conflict_type=conflict_type,
                             action_id=action.id,
                             reason_code="POLICY_FORBIDDEN_FLAG",
                             message=f"Action '{action.action_type}' violates policy '{policy.id}' ({policy.rule_name}): Case has active flag '{flag}'. {policy.explanation}",

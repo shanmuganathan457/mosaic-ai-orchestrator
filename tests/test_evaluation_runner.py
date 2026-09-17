@@ -18,7 +18,7 @@ def test_evaluation_runner_execution():
     report = runner.run_benchmark(DATASET_PATH)
 
     assert report.dataset_version == "v1"
-    assert report.total_cases == 20
+    assert report.total_cases == 23
     assert "baseline_a_single_intent" in report.systems
     assert "baseline_b_direct_multi_agent" in report.systems
     assert "mosaic_validated" in report.systems
@@ -37,7 +37,7 @@ def test_evaluation_runner_execution():
 
         with open(out_file, "r", encoding="utf-8") as f:
             data = json.load(f)
-        assert data["total_cases"] == 20
+        assert data["total_cases"] == 23
         assert "systems" in data
     finally:
         if out_file.exists():

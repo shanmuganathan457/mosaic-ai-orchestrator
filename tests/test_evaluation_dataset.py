@@ -15,7 +15,7 @@ DATASET_PATH = Path("tests/fixtures/research_dataset/v1/cases.json")
 def test_load_benchmark_dataset_success():
     """Verify that cases.json loads successfully and validates against BenchmarkCase schema."""
     cases = load_benchmark_dataset(DATASET_PATH)
-    assert len(cases) == 20
+    assert len(cases) == 23
     assert all(isinstance(c, BenchmarkCase) for c in cases)
     assert cases[0].case_id == "case_001"
     assert cases[0].expected_final_verdict.value == "ALLOW"

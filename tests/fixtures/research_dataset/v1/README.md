@@ -13,39 +13,52 @@ The MOSAIC benchmark dataset evaluates multi-intent customer-support automation 
 
 ---
 
-## 2. Case Categories
+## 2. Category & Verdict Distribution
 
-The 20 benchmark cases cover 8 distinct scenario categories across **BILLING**, **SECURITY**, **SUBSCRIPTION**, and **ACCESS_RESTORATION**:
+The corrected dataset contains **23 total benchmark cases** with the following distribution:
+
+- **10 ALLOW cases:** Multi-intent and single-intent operations where all preconditions, dependencies, and state transitions are satisfied without conflict.
+- **10 BLOCK cases:** Operations with failing preconditions, missing dependencies, or conflicting state mutations.
+- **3 ESCALATED cases:** Scenarios representing operational ambiguity or unresolved compliance/security flags where safe execution cannot be deterministically guaranteed.
+
+### Benchmark Categories (8 distinct scenario types):
 
 1. **`independent_valid`**: Multi-intent inquiries where all proposed actions are valid and compatible. Expected verdict: `ALLOW`.
 2. **`missing_precondition`**: Actions requiring state facts (`payment_verified`, `identity_verified`) that are missing or false. Expected verdict: `BLOCK`.
 3. **`failed_dependency`**: Actions requiring prerequisite actions (e.g., identity verification) that have not been completed. Expected verdict: `BLOCK`.
-4. **`cross_action_conflict`**: Multiple agent actions proposing incompatible postcondition state changes (e.g. `account_status = restricted` vs `active`). Expected verdict: `BLOCK`.
+4. **`cross_action_conflict`**: Multiple agent actions proposing incompatible postcondition state changes (e.g., `account_status = restricted` vs `active`). Expected verdict: `BLOCK`.
 5. **`state_dependent_valid`**: Scenarios testing state-dependent execution bounds. Expected verdict: `ALLOW`.
 6. **`state_dependent_invalid`**: Scenarios testing state-dependent execution bounds when facts fail. Expected verdict: `BLOCK`.
-7. **`insufficient_info_escalate`**: Inquiries with ambiguous evidence or unresolvable policy constraints requiring human review. Expected verdict: `ESCALATED`.
+7. **`insufficient_info_escalate`**: Inquiries with ambiguous evidence (e.g., suspicious login location, active legal hold, mandatory audit flags) requiring human intervention. Expected verdict: `ESCALATED`.
 8. **`no_conflict_multi_intent`**: Multi-intent inquiries touching separate domains (e.g., refund + subscription cancellation) without state collision. Expected verdict: `ALLOW`.
 
 ---
 
-## 3. Ground Truth Methodology
+## 3. Escalation Ground-Truth Definition
 
-Each case explicitly defines:
-- **`case_id`**: Unique string identifier.
-- **`customer_message`**: Raw customer email/message.
-- **`expected_intents`**: Intent names expected to be decomposed.
-- **`expected_agent_actions`**: Agent action types expected to be compiled.
-- **`initial_facts`** & **`active_flags`**: Initial case state context.
-- **`expected_final_verdict`**: Expected ground truth (`ALLOW`, `BLOCK`, `ESCALATED`).
-- **`expected_conflicts`**: Array of conflict types if non-ALLOW.
-- **`rationale`**: Human-readable rationale explaining the expected verdict.
+A case is designated as **`ESCALATED`** when:
+- Required security/identity verification cannot be established from case context (e.g., `SUSPICIOUS_LOCATION_LOGIN`).
+- Active legal or compliance restrictions freeze account modifications (e.g., `PENDING_LEGAL_HOLD`).
+- Critical state information is ambiguous or conflicting evidence cannot be safely reconciled (e.g., `MANUAL_AUDIT_REQUIRED`).
+
+Escalation is **NOT** triggered merely because multiple actions exist or by naive string keyword matching. Each `ESCALATED` case explicitly tests whether the system safely halts automated execution when deterministic safety bounds cannot be guaranteed.
 
 ---
 
-## 4. How to Add Future Cases
+## 4. Intent Comparison Methodology
 
-To add new benchmark cases to `v1/cases.json`:
-1. Ensure the new case follows the `BenchmarkCase` Pydantic schema in `src/mosaic/evaluation/models.py`.
-2. Provide explicit `initial_facts` and `expected_final_verdict`.
-3. Verify that `expected_conflicts` correctly list relevant `ConflictType` enum strings.
-4. Run `python -m pytest tests/test_evaluation_dataset.py` to validate schema correctness.
+Intent evaluation uses set-based micro-aggregated precision, recall, and F1 metrics:
+
+$$\text{True Positives (TP)} = | \text{Predicted Intents} \cap \text{Expected Intents} |$$
+$$\text{False Positives (FP)} = | \text{Predicted Intents} \setminus \text{Expected Intents} |$$
+$$\text{False Negatives (FN)} = | \text{Expected Intents} \setminus \text{Predicted Intents} |$$
+
+Counts are aggregated across all benchmark cases before calculating micro-averaged Precision, Recall, and F1 to prevent skewed per-case averaging. Zero-denominator edge cases return `1.0` if both predicted and expected sets are empty, and `0.0` if one set is empty while the other is non-empty.
+
+---
+
+## 5. Synthetic Benchmark Limitations
+
+> [!NOTE]
+> This synthetic benchmark provides a controlled development baseline for evaluating architectural state-validation mechanisms.
+> Results must NOT be interpreted as statistically significant proofs of real-world LLM performance or claims of general AI superiority.

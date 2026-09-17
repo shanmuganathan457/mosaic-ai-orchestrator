@@ -33,6 +33,9 @@ class EvaluationSystemResult(BaseModel):
     predicted_verdict: ValidationVerdict
     expected_verdict: ValidationVerdict
     verdict_correct: bool
+    intent_precision: float
+    intent_recall: float
+    intent_f1: float
     detected_conflicts: List[ConflictType]
     expected_conflicts: List[ConflictType]
     conflict_precision: float
@@ -47,6 +50,9 @@ class AggregateMetrics(BaseModel):
     """Aggregated evaluation metrics for a specific system across the dataset."""
     total_cases: int
     verdict_accuracy: float
+    intent_precision: float
+    intent_recall: float
+    intent_f1: float
     conflict_precision: float
     conflict_recall: float
     conflict_f1: float
