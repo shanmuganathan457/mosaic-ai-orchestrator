@@ -4,7 +4,7 @@ import json
 import logging
 from pathlib import Path
 import time
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from mosaic.config.settings import settings
 from mosaic.evaluation.baselines import (
@@ -12,6 +12,7 @@ from mosaic.evaluation.baselines import (
     BaselineBDirectMultiAgentSystem,
     BaseResearchSystem,
     MosaicResearchSystem,
+    SharedContextBuilder,
 )
 from mosaic.evaluation.dataset import load_benchmark_dataset
 from mosaic.evaluation.metrics import compute_aggregate_metrics
@@ -20,6 +21,7 @@ from mosaic.evaluation.models import (
     BenchmarkCase,
     EvaluationReport,
     EvaluationSystemResult,
+    SharedEvaluationContext,
 )
 from mosaic.llm.base import BaseLLMProvider
 from mosaic.llm.models import LLMRequest, LLMResponse
@@ -153,6 +155,82 @@ class EvaluationRunner:
             per_case_results=all_results,
         )
 
+    def run_benchmark_shared(
+        self,
+        dataset_or_path: Union[str, Path, List[BenchmarkCase]],
+        shared_context_builder: SharedContextBuilder,
+    ) -> EvaluationReport:
+        """Runs the benchmark using Design C: shared intent decomposition and action compilation.
+
+        For each case:
+        1. A single SharedEvaluationContext is built via shared_context_builder.build().
+           This makes exactly ONE LLM decomposition call and ONE compilation call per proposal.
+        2. All registered systems receive the same SharedEvaluationContext and evaluate independently.
+
+        Research Integrity:
+        - Ground truth is never passed to the builder or shared context.
+        - Each system applies its own unique downstream logic on the shared artifacts.
+        - MOSAIC still runs its full deterministic Validation Engine.
+        - Baseline A still takes only the first intent/action from the shared results.
+        """
+        if isinstance(dataset_or_path, (str, Path)):
+            cases = load_benchmark_dataset(dataset_or_path)
+        else:
+            cases = dataset_or_path
+
+        all_results: List[EvaluationSystemResult] = []
+        systems_aggregate: Dict[str, AggregateMetrics] = {}
+
+        # Pre-collect per-system results lists
+        system_results_map: Dict[str, List[EvaluationSystemResult]] = {
+            system.system_name: [] for system in self.systems
+        }
+
+        for case in cases:
+            # ONE shared context build per case (1 decomposition + N compilations)
+            shared = shared_context_builder.build(
+                customer_message=case.customer_message,
+                initial_facts=dict(case.initial_facts),
+                active_flags=list(case.active_flags),
+            )
+
+            # All systems evaluate using the shared context
+            for system in self.systems:
+                res = system.evaluate_case_with_shared_context(case, shared)
+                system_results_map[system.system_name].append(res)
+                all_results.append(res)
+
+        # Compute aggregate metrics per system
+        for system in self.systems:
+            results = system_results_map[system.system_name]
+            aggregate = compute_aggregate_metrics(results, cases)
+            systems_aggregate[system.system_name] = aggregate
+
+        return EvaluationReport(
+            dataset_version=self.dataset_version,
+            provider_name=self.provider_name,
+            model_name=self.model_name,
+            total_cases=len(cases),
+            systems=systems_aggregate,
+            per_case_results=all_results,
+        )
+
+    def run_and_save_report_shared(
+        self,
+        dataset_or_path: Union[str, Path, List[BenchmarkCase]],
+        shared_context_builder: SharedContextBuilder,
+        output_path: Union[str, Path],
+    ) -> EvaluationReport:
+        """Runs shared-context evaluation and serializes the resulting report to JSON."""
+        report = self.run_benchmark_shared(dataset_or_path, shared_context_builder)
+        out_path = Path(output_path)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(report.model_dump_json(indent=2))
+
+        return report
+
     def run_and_save_report(
         self, dataset_or_path: Union[str, Path, List[BenchmarkCase]], output_path: Union[str, Path]
     ) -> EvaluationReport:
@@ -212,7 +290,7 @@ def main() -> None:
         systems = [
             BaselineASingleIntentSystem(intake_engine=decomposer, compiler=compiler),
             BaselineBDirectMultiAgentSystem(intake_engine=decomposer, compiler=compiler),
-            MosaicResearchSystem(orchestrator=MosaicOrchestrator(intake_engine=decomposer, action_compiler=compiler)),
+            MosaicResearchSystem(orchestrator=MosaicOrchestrator(intake_engine=decomposer, compiler=compiler)),
         ]
     elif provider_name == "gemini":
         model_name = args.model or "gemini-2.5-flash"
@@ -233,6 +311,7 @@ def main() -> None:
             BaselineBDirectMultiAgentSystem(intake_engine=decomposer, compiler=compiler),
             MosaicResearchSystem(orchestrator=MosaicOrchestrator(intake_engine=decomposer, compiler=compiler)),
         ]
+
     else:
         model_name = args.model or "mock-deterministic-v1"
         systems = [

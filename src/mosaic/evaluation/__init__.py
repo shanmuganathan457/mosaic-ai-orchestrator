@@ -5,6 +5,7 @@ from mosaic.evaluation.baselines import (
     BaselineBDirectMultiAgentSystem,
     BaseResearchSystem,
     MosaicResearchSystem,
+    SharedContextBuilder,
 )
 from mosaic.evaluation.dataset import load_benchmark_dataset
 from mosaic.evaluation.metrics import (
@@ -16,12 +17,14 @@ from mosaic.evaluation.models import (
     BenchmarkCase,
     EvaluationReport,
     EvaluationSystemResult,
+    SharedEvaluationContext,
 )
 from mosaic.evaluation.runner import EvaluationRunner
 
 __all__ = [
     "BenchmarkCase",
     "EvaluationSystemResult",
+    "SharedEvaluationContext",
     "AggregateMetrics",
     "EvaluationReport",
     "load_benchmark_dataset",
@@ -31,5 +34,6 @@ __all__ = [
     "BaselineASingleIntentSystem",
     "BaselineBDirectMultiAgentSystem",
     "MosaicResearchSystem",
+    "SharedContextBuilder",
     "EvaluationRunner",
 ]

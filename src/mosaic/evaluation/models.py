@@ -1,9 +1,11 @@
 """Evaluation Domain Models & Schemas for Benchmark Dataset and Runner."""
 
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Tuple
+from uuid import UUID
 from pydantic import BaseModel, Field, ConfigDict
 
-from mosaic.domain.models import ValidationVerdict, ConflictType
+from mosaic.domain.models import Action, Case, ConflictType, SubTask, IntentSpan, ValidationVerdict
 
 
 class BenchmarkCase(BaseModel):
@@ -23,6 +25,38 @@ class BenchmarkCase(BaseModel):
     rationale: str = Field(..., description="Human-readable rationale explaining the expected verdict.")
 
     model_config = ConfigDict(frozen=True)
+
+
+@dataclass
+class SharedEvaluationContext:
+    """Shared upstream evaluation artifacts computed once per benchmark case.
+
+    Holds the decomposed case + subtask_mappings from a single LLM intent decomposition call,
+    plus a pre-compiled Action map (proposal_id → Action) from a single LLM compilation pass.
+
+    These artifacts are shared across Baseline A, Baseline B, and MOSAIC to eliminate
+    redundant LLM calls while preserving fair comparison.
+
+    RESEARCH INTEGRITY NOTE:
+    - Ground truth fields (expected_verdict, expected_intents, expected_conflicts) are NEVER stored here.
+    - Each system performs its own independent downstream logic after receiving these shared inputs.
+    - MOSAIC still runs its full deterministic validation independently.
+    """
+
+    case: Case
+    """Shared CaseState container built from the single decomposition pass."""
+
+    subtask_mappings: List[Tuple["SubTask", "IntentSpan", str]]
+    """Ordered list of (SubTask, IntentSpan, agent_name) tuples from decomposition."""
+
+    compiled_actions: List["Action"]
+    """Pre-compiled Action objects from a single compile pass over all proposals."""
+
+    token_usage: Dict[str, Any] = field(default_factory=dict)
+    """Aggregated LLM token usage from shared decomposition + compilation calls."""
+
+    llm_call_count: int = 0
+    """Number of LLM generate() calls made during shared context construction."""
 
 
 class EvaluationSystemResult(BaseModel):
