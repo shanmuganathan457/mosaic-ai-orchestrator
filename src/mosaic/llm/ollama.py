@@ -76,7 +76,13 @@ class OllamaProvider(BaseLLMProvider):
             payload["options"]["num_predict"] = request.max_tokens
 
         if request.structured_schema is not None:
-            payload["format"] = "json"
+            # Pass the full JSON Schema object so Ollama constrains token generation
+            # to the exact field names defined in the schema.
+            # Older Ollama versions that do not understand schema-format will ignore
+            # the extra keys and still produce JSON; newer versions (>=0.5.0) enforce
+            # the schema natively. Sending the schema object is strictly more
+            # informative than the generic string "json".
+            payload["format"] = request.structured_schema
 
         data_bytes = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
