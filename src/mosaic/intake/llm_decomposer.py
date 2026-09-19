@@ -8,7 +8,7 @@ with Pydantic boundary validation.
 import json
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, Field, ValidationError
 
 from mosaic.domain.models.schemas import IntentCategory, IntentSpan
@@ -17,27 +17,121 @@ from mosaic.llm import BaseLLMProvider, LLMError, LLMRequest, LLMResponseError
 
 logger = logging.getLogger("mosaic.intake.llm_decomposer")
 
-INTENT_EXTRACTION_SYSTEM_PROMPT = """You are an expert customer-support intent extraction model for the MOSAIC architecture.
-Your sole job is to identify distinct operational intents and verbatim evidence spans in raw customer messages.
+# ---------------------------------------------------------------------------
+# Canonical vocabularies — single source of truth derived from domain enums
+# and the default_agent_map in decomposer.py.
+# MUST stay in sync with IntentCategory and default_agent_map.
+# ---------------------------------------------------------------------------
 
-Follow these strict rules:
-1. Identify ALL distinct customer intents present in the text.
-2. Do NOT invent intents not supported by verbatim text evidence in the message.
-3. Extract exact verbatim evidence spans from the customer text.
-4. Assign an appropriate IntentCategory (SECURITY, BILLING, SUBSCRIPTION, ACCESS_RESTORATION, TECHNICAL_SUPPORT, GENERAL_INQUIRY).
-5. Provide a confidence score between 0.0 and 1.0.
-6. Do NOT invent entity identifiers (payment_id, account_id, subscription_id) not present in the customer message.
-7. Do NOT evaluate business policy rules or validation safety (DO NOT output ALLOW, BLOCK, or ESCALATE).
+# Category Literal — mirrors IntentCategory enum values exactly
+CanonicalCategory = Literal[
+    "SECURITY",
+    "BILLING",
+    "SUBSCRIPTION",
+    "ACCESS_RESTORATION",
+    "TECHNICAL_SUPPORT",
+    "GENERAL_INQUIRY",
+]
 
-Return ONLY valid JSON matching the requested schema.
+# Intent-name Literal — mirrors default_agent_map keys exactly
+CanonicalIntentName = Literal[
+    "restrict_account",
+    "refund_payment",
+    "cancel_subscription",
+    "restore_login_access",
+]
+
+CANONICAL_INTENT_NAMES = (
+    "restrict_account",
+    "refund_payment",
+    "cancel_subscription",
+    "restore_login_access",
+)
+
+# ---------------------------------------------------------------------------
+# System prompt
+# ---------------------------------------------------------------------------
+
+INTENT_EXTRACTION_SYSTEM_PROMPT = """\
+You are a customer-support intent extraction model for the MOSAIC system.
+The user will provide a customer message. Extract all distinct intents from it.
+
+== FIELDS ==
+
+category (string enum)
+  The broad operational domain. Choose EXACTLY one value from:
+    SECURITY | BILLING | SUBSCRIPTION | ACCESS_RESTORATION | TECHNICAL_SUPPORT | GENERAL_INQUIRY
+
+intent_name (string enum)
+  The specific canonical action identifier. Choose EXACTLY one value from:
+    restrict_account | refund_payment | cancel_subscription | restore_login_access
+
+verbatim_text (string)
+  An EXACT contiguous substring copied character-for-character from the customer message.
+  SOURCE RULE: This text MUST come from the customer message provided by the user.
+               It MUST NOT come from these instructions, field names, or enum values.
+  COPY the words the customer actually wrote. Do NOT paraphrase or invent.
+
+confidence (float 0.0–1.0)
+  Your extraction confidence.
+
+== EXAMPLE ==
+
+Customer message: "I was charged twice and I cannot log in."
+
+Correct output:
+{
+  "intents": [
+    {
+      "category": "BILLING",
+      "intent_name": "refund_payment",
+      "verbatim_text": "charged twice",
+      "confidence": 0.95
+    },
+    {
+      "category": "ACCESS_RESTORATION",
+      "intent_name": "restore_login_access",
+      "verbatim_text": "cannot log in",
+      "confidence": 0.95
+    }
+  ]
+}
+
+== RULES ==
+1. Extract ALL distinct intents present in the customer message.
+2. verbatim_text must be copied from the customer message — NOT from these instructions.
+3. Do not invent entity IDs (pay_xxx, sub_xxx, acc_xxx) that are not in the message.
+4. Do not output ALLOW, BLOCK, or ESCALATE.
+5. Return ONLY valid JSON.
 """
 
+# ---------------------------------------------------------------------------
+# Boundary Pydantic Schemas — enforce canonical vocabularies at LLM boundary
+# ---------------------------------------------------------------------------
 
-# Boundary Pydantic Schemas for Structured Output Validation
 class ExtractedIntentItem(BaseModel):
-    category: str = Field(..., description="Intent Category name matching IntentCategory Enum.")
-    intent_name: str = Field(..., description="Actionable intent name (e.g. refund_payment, restrict_account).")
-    verbatim_text: str = Field(..., description="Exact verbatim text span from customer message.")
+    category: CanonicalCategory = Field(
+        ...,
+        description=(
+            "Broad domain category. MUST be exactly one of: "
+            "SECURITY, BILLING, SUBSCRIPTION, ACCESS_RESTORATION, "
+            "TECHNICAL_SUPPORT, GENERAL_INQUIRY."
+        ),
+    )
+    intent_name: CanonicalIntentName = Field(
+        ...,
+        description=(
+            "Canonical action identifier. MUST be exactly one of: "
+            "restrict_account, refund_payment, cancel_subscription, restore_login_access."
+        ),
+    )
+    verbatim_text: str = Field(
+        ...,
+        description=(
+            "Exact contiguous substring copied from the customer message. "
+            "Must appear verbatim in the original text."
+        ),
+    )
     confidence: float = Field(default=0.9, ge=0.0, le=1.0)
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
@@ -48,6 +142,10 @@ class ExtractedIntentsPayload(BaseModel):
 
 INTENT_EXTRACTION_SCHEMA = ExtractedIntentsPayload.model_json_schema()
 
+
+# ---------------------------------------------------------------------------
+# LLM Decomposer
+# ---------------------------------------------------------------------------
 
 class LLMIntentDecomposer(BaseIntentDecomposer):
     """LLM-backed Intent Decomposition Strategy relying on BaseLLMProvider."""
@@ -105,28 +203,34 @@ class LLMIntentDecomposer(BaseIntentDecomposer):
         # Map parsed Pydantic items to domain IntentSpan objects with integrity validation
         spans: List[IntentSpan] = []
         for item in payload.intents:
-            # 1. Enforce strict IntentCategory enum validation (DO NOT SILENTLY DEFAULT)
-            category_str = item.category.upper()
+            # 1. Map CanonicalCategory string to IntentCategory domain enum
+            # (Pydantic already validated the value is one of the six allowed strings)
             try:
-                category_enum = IntentCategory(category_str)
+                category_enum = IntentCategory(item.category)
             except ValueError:
-                logger.error("LLM returned unsupported/invalid IntentCategory '%s'.", item.category)
+                # Should never reach here due to Pydantic Literal validation
+                logger.error("Unexpected IntentCategory mapping failure for '%s'.", item.category)
                 raise LLMResponseError(
-                    f"Invalid IntentCategory '{item.category}' returned by LLM. Must be one of {[c.value for c in IntentCategory]}."
+                    f"Invalid IntentCategory '{item.category}' returned by LLM. "
+                    f"Must be one of {[c.value for c in IntentCategory]}."
                 )
 
-            # 2. Evidence Integrity: Verify verbatim_text exists in raw_message
+            # 2. Evidence Integrity: Verify verbatim_text is an exact substring of raw_message
             match = re.search(re.escape(item.verbatim_text), raw_message, re.IGNORECASE)
             if not match and self.enforce_verbatim_traceability:
-                logger.error("LLM returned hallucinated verbatim_text '%s' not present in raw message.", item.verbatim_text)
+                logger.error(
+                    "LLM returned hallucinated verbatim_text '%s' not present in raw message.",
+                    item.verbatim_text,
+                )
                 raise LLMResponseError(
-                    f"Evidence integrity error: verbatim_text '{item.verbatim_text}' is not traceable to customer message."
+                    f"Evidence integrity error: verbatim_text '{item.verbatim_text}' "
+                    f"is not traceable to customer message."
                 )
 
             start_char = match.start() if match else 0
             end_char = match.end() if match else len(item.verbatim_text)
 
-            # 3. Metadata Provenance: Preserve metadata while deriving explicit IDs from verbatim text if available
+            # 3. Metadata Provenance: Derive entity IDs from verbatim customer text only
             metadata = dict(item.metadata)
             pay_match = re.search(r"pay_\w+", raw_message, re.IGNORECASE)
             if pay_match and "payment_id" not in metadata:

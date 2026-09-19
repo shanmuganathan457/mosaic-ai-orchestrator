@@ -146,7 +146,7 @@ def test_llm_intent_decomposer_invalid_intent_category_rejection():
     provider = MockLLMProvider(fixed_structured_output=invalid_category_payload)
     decomposer = LLMIntentDecomposer(llm_provider=provider)
 
-    with pytest.raises(LLMResponseError, match="Invalid IntentCategory"):
+    with pytest.raises(LLMResponseError):
         decomposer.decompose_message("Please refund my money.")
 
 
@@ -229,3 +229,191 @@ def test_orchestrator_comparability_strategy_injection():
     # Downstream Validation Verdict must be identical (ALLOW) across both strategy implementations
     assert det_result.verdict == ValidationVerdict.ALLOW
     assert llm_result.verdict == ValidationVerdict.ALLOW
+
+
+# ==========================================
+# CANONICAL CONTRACT ENFORCEMENT TESTS
+# These tests verify the strict LLM output contract:
+# - category must be a domain IntentCategory value
+# - intent_name must be a canonical agent-map key
+# - verbatim_text must be traceable to the customer message
+# ==========================================
+
+class TestCanonicalContractEnforcement:
+    """Verifies that ExtractedIntentItem and LLMIntentDecomposer enforce the canonical
+    category/intent_name vocabulary and verbatim evidence traceability at the schema boundary."""
+
+    # --- 1. Valid category + valid canonical intent accepted ---
+    def test_valid_category_and_intent_accepted(self):
+        """Valid BILLING + refund_payment must be accepted without error."""
+        payload = {
+            "intents": [{
+                "category": "BILLING",
+                "intent_name": "refund_payment",
+                "verbatim_text": "charged twice",
+                "confidence": 0.95,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        spans = decomposer.decompose_message("I was charged twice.")
+        assert len(spans) == 1
+        assert spans[0].category == IntentCategory.BILLING
+        assert spans[0].intent_name == "refund_payment"
+
+    # --- 2. Invalid category (intent name used as category) must be rejected ---
+    def test_invalid_category_restore_login_access_rejected(self):
+        """RESTORE_LOGIN_ACCESS is an intent_name, not a category. Must be rejected by Pydantic."""
+        payload = {
+            "intents": [{
+                "category": "RESTORE_LOGIN_ACCESS",  # invalid — this is an intent name
+                "intent_name": "restore_login_access",
+                "verbatim_text": "cannot log in",
+                "confidence": 0.9,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        with pytest.raises(LLMResponseError):
+            decomposer.decompose_message("I cannot log in to my account.")
+
+    # --- 3. Invalid intent name (free-form) must be rejected ---
+    def test_invalid_intent_name_refund_request_rejected(self):
+        """REFUND_REQUEST is a free-form name not in the canonical set. Must be rejected."""
+        payload = {
+            "intents": [{
+                "category": "BILLING",
+                "intent_name": "REFUND_REQUEST",  # invalid — not a canonical identifier
+                "verbatim_text": "refund",
+                "confidence": 0.9,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        with pytest.raises(LLMResponseError):
+            decomposer.decompose_message("Please process my refund.")
+
+    # --- 4. ACCESS_RESTORATION + restore_login_access is valid ---
+    def test_access_restoration_category_and_intent_accepted(self):
+        """ACCESS_RESTORATION category + restore_login_access intent must be accepted."""
+        payload = {
+            "intents": [{
+                "category": "ACCESS_RESTORATION",
+                "intent_name": "restore_login_access",
+                "verbatim_text": "cannot log in",
+                "confidence": 0.93,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        spans = decomposer.decompose_message("I cannot log in to my account.")
+        assert len(spans) == 1
+        assert spans[0].category == IntentCategory.ACCESS_RESTORATION
+        assert spans[0].intent_name == "restore_login_access"
+
+    # --- 5. Verbatim text copied exactly from customer message is accepted ---
+    def test_exact_verbatim_from_message_accepted(self):
+        """Verbatim text that is an exact substring of the customer message must be accepted."""
+        raw_message = "Please cancel my active subscription sub_202."
+        payload = {
+            "intents": [{
+                "category": "SUBSCRIPTION",
+                "intent_name": "cancel_subscription",
+                "verbatim_text": "cancel my active subscription",
+                "confidence": 0.97,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        spans = decomposer.decompose_message(raw_message)
+        assert len(spans) == 1
+        assert spans[0].verbatim_text == "cancel my active subscription"
+        assert spans[0].intent_name == "cancel_subscription"
+
+    # --- 6. Paraphrased verbatim text is rejected ---
+    def test_paraphrased_verbatim_text_rejected(self):
+        """Paraphrased text not present in the customer message must be rejected."""
+        raw_message = "I want to stop my plan."
+        payload = {
+            "intents": [{
+                "category": "SUBSCRIPTION",
+                "intent_name": "cancel_subscription",
+                "verbatim_text": "cancel my subscription",  # paraphrase — not in raw_message
+                "confidence": 0.9,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        with pytest.raises(LLMResponseError, match="Evidence integrity error"):
+            decomposer.decompose_message(raw_message)
+
+    # --- 7. System-prompt description text used as verbatim is rejected ---
+    def test_system_prompt_description_as_verbatim_rejected(self):
+        """Text from the system prompt (not the customer message) used as verbatim must be rejected."""
+        raw_message = "Please cancel my subscription."
+        # This text came from the old system prompt examples, not the customer message
+        payload = {
+            "intents": [{
+                "category": "SUBSCRIPTION",
+                "intent_name": "cancel_subscription",
+                "verbatim_text": "cancel/terminate/stop subscription, plan, or membership",
+                "confidence": 0.9,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        with pytest.raises(LLMResponseError, match="Evidence integrity error"):
+            decomposer.decompose_message(raw_message)
+
+    # --- 8. Existing metadata/evidence integrity check: hallucinated verbatim rejected ---
+    def test_hallucinated_verbatim_completely_absent_rejected(self):
+        """Completely invented verbatim text not present anywhere in customer message is rejected."""
+        payload = {
+            "intents": [{
+                "category": "BILLING",
+                "intent_name": "refund_payment",
+                "verbatim_text": "refund payment",  # not in the message below
+                "confidence": 0.9,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        with pytest.raises(LLMResponseError, match="Evidence integrity error"):
+            decomposer.decompose_message("I noticed a charge on my account and I want my money back.")
+
+    # --- 9. Existing mock-provider tests: unsupported unknown category still rejected ---
+    def test_completely_unknown_category_rejected(self):
+        """A completely unknown/unsupported category string must be rejected."""
+        payload = {
+            "intents": [{
+                "category": "UNSUPPORTED_UNKNOWN_CATEGORY",
+                "intent_name": "refund_payment",
+                "verbatim_text": "refund",
+                "confidence": 0.9,
+            }]
+        }
+        provider = MockLLMProvider(fixed_structured_output=payload)
+        decomposer = LLMIntentDecomposer(llm_provider=provider)
+        with pytest.raises(LLMResponseError):
+            decomposer.decompose_message("Please refund my money.")
+
+    # --- JSON schema verification ---
+    def test_json_schema_exposes_category_enum(self):
+        """The generated JSON schema must expose category as an enum with all six IntentCategory values."""
+        from mosaic.intake.llm_decomposer import ExtractedIntentItem
+        schema = ExtractedIntentItem.model_json_schema()
+        cat_schema = schema["properties"]["category"]
+        assert "enum" in cat_schema, "category must have enum constraint in JSON schema"
+        enum_values = set(cat_schema["enum"])
+        expected = {"SECURITY", "BILLING", "SUBSCRIPTION", "ACCESS_RESTORATION", "TECHNICAL_SUPPORT", "GENERAL_INQUIRY"}
+        assert enum_values == expected, f"Unexpected category enum values: {enum_values}"
+
+    def test_json_schema_exposes_intent_name_enum(self):
+        """The generated JSON schema must expose intent_name as an enum with all four canonical identifiers."""
+        from mosaic.intake.llm_decomposer import ExtractedIntentItem
+        schema = ExtractedIntentItem.model_json_schema()
+        intent_schema = schema["properties"]["intent_name"]
+        assert "enum" in intent_schema, "intent_name must have enum constraint in JSON schema"
+        enum_values = set(intent_schema["enum"])
+        expected = {"restrict_account", "refund_payment", "cancel_subscription", "restore_login_access"}
+        assert enum_values == expected, f"Unexpected intent_name enum values: {enum_values}"
