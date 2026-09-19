@@ -114,13 +114,30 @@ class AggregateMetrics(BaseModel):
     model_config = ConfigDict(frozen=True)
 
 
+class FailedCaseRecord(BaseModel):
+    """Container recording an unhandled exception during benchmark case execution."""
+    case_id: str
+    failure_stage: str = Field(default="UNKNOWN", description="Stage where failure occurred: INTENT_DECOMPOSITION, ACTION_COMPILATION, SYSTEM_EVALUATION, etc.")
+    exception_type: str = Field(..., description="Exception class name (e.g. LLMError, TimeoutError).")
+    error_message: str = Field(..., description="Human-readable exception details.")
+
+    model_config = ConfigDict(frozen=True)
+
+
 class EvaluationReport(BaseModel):
     """Complete serialized JSON evaluation report output."""
     dataset_version: str
     provider_name: str = "mock"
     model_name: str = "mock-deterministic-v1"
+    evaluation_design: str = Field(default="standard", description="Evaluation design methodology: 'standard' or 'shared_context'.")
     total_cases: int
-    systems: Dict[str, AggregateMetrics]
-    per_case_results: List[EvaluationSystemResult]
+    completed_cases: int = 0
+    failed_cases_count: int = 0
+    skipped_resumed_cases: int = 0
+    successful_llm_calls: int = 0
+    failed_llm_calls: int = 0
+    systems: Dict[str, AggregateMetrics] = Field(default_factory=dict)
+    per_case_results: List[EvaluationSystemResult] = Field(default_factory=list)
+    failed_case_records: List[FailedCaseRecord] = Field(default_factory=list)
 
     model_config = ConfigDict(frozen=True)

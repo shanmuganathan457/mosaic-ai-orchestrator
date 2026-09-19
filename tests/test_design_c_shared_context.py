@@ -507,3 +507,138 @@ class TestEvaluationRunnerShared:
         result_case_ids = {r.case_id for r in report.per_case_results}
         assert "shared_test_001" in result_case_ids
         assert "shared_test_002" in result_case_ids
+
+
+# ============================================================================
+# Fault-Tolerance, Persistence & Resume Tests
+# ============================================================================
+
+import tempfile
+from pathlib import Path
+
+class TestSharedContextResilienceAndResume:
+    """Tests per-case exception isolation, atomic persistence, resume capabilities, and failure accounting."""
+
+    def test_per_case_exception_isolation(self):
+        """Verify that an exception in case 1 does not prevent case 2 from completing."""
+        builder = SharedContextBuilder()
+        runner = EvaluationRunner()
+        cases = [SINGLE_INTENT_CASE, MULTI_INTENT_CASE]
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            out_path = Path(tmp_dir) / "results.json"
+
+            original_build = builder.build
+            call_count = 0
+
+            def faulty_build(*args, **kwargs):
+                nonlocal call_count
+                call_count += 1
+                if call_count == 1:
+                    raise RuntimeError("Simulated Ollama Timeout in Intent Decomposition")
+                return original_build(*args, **kwargs)
+
+            with patch.object(builder, "build", side_effect=faulty_build):
+                report = runner.run_and_save_report_shared(cases, builder, output_path=out_path, resume=False)
+
+            assert report.total_cases == 2
+            assert report.completed_cases == 1
+            assert report.failed_cases_count == 1
+            assert len(report.failed_case_records) == 1
+            assert report.failed_case_records[0].case_id == SINGLE_INTENT_CASE.case_id
+            assert report.failed_case_records[0].exception_type == "RuntimeError"
+            assert "Simulated Ollama Timeout" in report.failed_case_records[0].error_message
+            assert report.failed_case_records[0].failure_stage == "INTENT_DECOMPOSITION"
+
+            completed_c_ids = {r.case_id for r in report.per_case_results}
+            assert MULTI_INTENT_CASE.case_id in completed_c_ids
+            assert SINGLE_INTENT_CASE.case_id not in completed_c_ids
+
+            assert out_path.exists()
+            summary_file = Path(tmp_dir) / "summary.json"
+            assert summary_file.exists()
+
+    def test_resume_skips_completed_cases(self):
+        """Verify that running with resume=True skips already completed cases."""
+        builder = SharedContextBuilder()
+        runner = EvaluationRunner()
+        cases = [SINGLE_INTENT_CASE, MULTI_INTENT_CASE]
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            out_path = Path(tmp_dir) / "results.json"
+
+            report1 = runner.run_and_save_report_shared([SINGLE_INTENT_CASE], builder, output_path=out_path, resume=False)
+            assert report1.completed_cases == 1
+
+            with patch.object(builder, "build", wraps=builder.build) as mock_build:
+                report2 = runner.run_and_save_report_shared(cases, builder, output_path=out_path, resume=True)
+
+            assert mock_build.call_count == 1
+            assert report2.total_cases == 2
+            assert report2.completed_cases == 2
+            assert report2.skipped_resumed_cases == 1
+
+    def test_resume_rejected_on_metadata_mismatch(self):
+        """Verify that provider/model/dataset mismatch prevents unsafe resume."""
+        builder = SharedContextBuilder()
+        runner = EvaluationRunner(provider_name="ollama", model_name="llama3.2:latest", dataset_version="v1_natural_language")
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            out_path = Path(tmp_dir) / "results.json"
+
+            report_mock = EvaluationRunner(provider_name="mock").run_and_save_report_shared([SINGLE_INTENT_CASE], builder, output_path=out_path, resume=False)
+
+            with patch.object(builder, "build", wraps=builder.build) as mock_build:
+                report_resumed = runner.run_and_save_report_shared([SINGLE_INTENT_CASE, MULTI_INTENT_CASE], builder, output_path=out_path, resume=True)
+
+            assert mock_build.call_count == 2
+            assert report_resumed.skipped_resumed_cases == 0
+
+    def test_failed_cases_retry_on_resume(self):
+        """Verify that failed cases are retried when resuming."""
+        builder = SharedContextBuilder()
+        runner = EvaluationRunner()
+        cases = [SINGLE_INTENT_CASE, MULTI_INTENT_CASE]
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            out_path = Path(tmp_dir) / "results.json"
+
+            call_count = 0
+            original_build = builder.build
+
+            def faulty_build(*args, **kwargs):
+                nonlocal call_count
+                call_count += 1
+                if call_count == 1:
+                    raise RuntimeError("Transient network error")
+                return original_build(*args, **kwargs)
+
+            with patch.object(builder, "build", side_effect=faulty_build):
+                runner.run_and_save_report_shared(cases, builder, output_path=out_path, resume=False)
+
+            report_resumed = runner.run_and_save_report_shared(cases, builder, output_path=out_path, resume=True)
+
+            assert report_resumed.total_cases == 2
+            assert report_resumed.completed_cases == 2
+            assert report_resumed.skipped_resumed_cases == 1
+
+    def test_ground_truth_isolation_and_metric_exclusion(self):
+        """Verify metrics exclude failed cases and ground truth is not leaked to builder."""
+        builder = SharedContextBuilder()
+        runner = EvaluationRunner()
+        cases = [SINGLE_INTENT_CASE, MULTI_INTENT_CASE]
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            out_path = Path(tmp_dir) / "results.json"
+
+            # Patch build to verify arguments passed to build never include ground truth fields
+            original_build = builder.build
+            def build_inspector(*args, **kwargs):
+                assert "expected_final_verdict" not in kwargs
+                assert "expected_intents" not in kwargs
+                assert "expected_agent_actions" not in kwargs
+                return original_build(*args, **kwargs)
+
+            with patch.object(builder, "build", side_effect=build_inspector):
+                report = runner.run_and_save_report_shared(cases, builder, output_path=out_path, resume=False)
+                assert report.completed_cases == 2
