@@ -1,0 +1,255 @@
+2026-09-21 13:36:26,392 [INFO] phase_7e_v2_runner - ==============================================================
+2026-09-21 13:36:26,393 [INFO] phase_7e_v2_runner - MOSAIC PHASE 7E DESIGN C BENCHMARK V2
+2026-09-21 13:36:26,393 [INFO] phase_7e_v2_runner - ==============================================================
+2026-09-21 13:36:26,465 [INFO] phase_7e_v2_runner - Git HEAD:   1979573c174e7d4caebf6c90c312fe129d3b8884
+2026-09-21 13:36:28,658 [INFO] phase_7e_v2_runner - Ollama available. Models: ['llama3.2:latest']
+2026-09-21 13:36:28,660 [INFO] phase_7e_v2_runner - Dataset:    tests\fixtures\research_dataset\v1_natural_language\cases.json (39 cases)
+2026-09-21 13:36:31,093 [INFO] phase_7e_v2_runner - Starting benchmark. Output: evaluation_results\phase_7e_design_c_v2\results.json
+2026-09-21 13:36:31,103 [INFO] phase_7e_v2_runner - Resume mode: ON (will skip already-completed cases)
+2026-09-21 13:36:52,272 [ERROR] mosaic.intake.llm_decomposer - LLM returned hallucinated verbatim_text 'refund, charge pay_101' not present in raw message.
+2026-09-21 13:36:52,273 [ERROR] mosaic.evaluation.runner - Error evaluating benchmark case_id=case_001_variant_01: Evidence integrity error: verbatim_text 'refund, charge pay_101' is not traceable to customer message.
+2026-09-21 13:37:15,170 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 13:37:15,171 [INFO] mosaic.intake.decomposer - Created Case id=2e478fd0-6aa1-4c9a-892b-2b7bd9370af5 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 13:37:52,730 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=ba731698-5b6a-46cd-9ef6-012a9f73e3aa for proposal_id=26d32655-ecab-4173-8a3e-58f36ea0dfe5.
+2026-09-21 13:38:30,223 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=661ac997-7596-4f93-a9d2-d9a63f192c43 for proposal_id=db1d874e-bc86-4abc-879b-d77e0c15d2f6.
+2026-09-21 13:38:30,225 [INFO] mosaic.validation.engine - Starting validation for case_id=2e478fd0-6aa1-4c9a-892b-2b7bd9370af5 with 2 proposed actions and 3 active policies.
+2026-09-21 13:38:30,225 [INFO] mosaic.validation.engine - Validation finished for case_id=2e478fd0-6aa1-4c9a-892b-2b7bd9370af5. Verdict=ALLOW, Allowed=2, Blocked=0, Escalated=0
+2026-09-21 13:38:51,808 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 13:38:51,809 [INFO] mosaic.intake.decomposer - Created Case id=5c3e6e76-2c53-4e82-bff4-8bf8eea07b5f for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 13:39:15,879 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=d4baa057-eff4-4c46-9e55-3aa41538dd94 for proposal_id=b3d9cdaf-a6fc-4a38-b163-96de24fe9995.
+2026-09-21 13:39:46,066 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=0027a96c-9635-422b-aa85-6793218aceb1 for proposal_id=5eb75946-f46a-4ab3-ac24-2b1690d45f26.
+2026-09-21 13:39:46,066 [INFO] mosaic.validation.engine - Starting validation for case_id=5c3e6e76-2c53-4e82-bff4-8bf8eea07b5f with 2 proposed actions and 3 active policies.
+2026-09-21 13:39:46,067 [INFO] mosaic.validation.engine - Validation finished for case_id=5c3e6e76-2c53-4e82-bff4-8bf8eea07b5f. Verdict=ALLOW, Allowed=2, Blocked=0, Escalated=0
+2026-09-21 13:39:59,479 [ERROR] mosaic.intake.llm_decomposer - LLM returned hallucinated verbatim_text 'refund payment' not present in raw message.
+2026-09-21 13:39:59,479 [ERROR] mosaic.evaluation.runner - Error evaluating benchmark case_id=case_002_variant_01: Evidence integrity error: verbatim_text 'refund payment' is not traceable to customer message.
+2026-09-21 13:40:12,758 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:40:12,758 [INFO] mosaic.intake.decomposer - Created Case id=79bf1ab0-da66-420c-b19f-c2f3194b0b8a for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:40:41,900 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=4ca59c21-2b93-48bb-8fc1-9d29617d2407 for proposal_id=c4bdbb14-484e-46b4-ac2a-62f109435201.
+2026-09-21 13:40:41,901 [INFO] mosaic.validation.engine - Starting validation for case_id=79bf1ab0-da66-420c-b19f-c2f3194b0b8a with 1 proposed actions and 3 active policies.
+2026-09-21 13:40:41,901 [INFO] mosaic.validation.engine - Validation finished for case_id=79bf1ab0-da66-420c-b19f-c2f3194b0b8a. Verdict=BLOCK, Allowed=0, Blocked=1, Escalated=0
+2026-09-21 13:40:55,486 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:40:55,487 [INFO] mosaic.intake.decomposer - Created Case id=e31ee20b-3041-48f3-9e3e-6297d8954e47 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:41:25,487 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=01ab85d0-93be-4580-8d78-ecc4c38eff07 for proposal_id=ff750ad9-097a-4ceb-a024-1f1135c7ea1b.
+2026-09-21 13:41:25,488 [INFO] mosaic.validation.engine - Starting validation for case_id=e31ee20b-3041-48f3-9e3e-6297d8954e47 with 1 proposed actions and 3 active policies.
+2026-09-21 13:41:25,488 [INFO] mosaic.validation.engine - Validation finished for case_id=e31ee20b-3041-48f3-9e3e-6297d8954e47. Verdict=BLOCK, Allowed=0, Blocked=1, Escalated=0
+2026-09-21 13:41:50,872 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 13:41:50,873 [INFO] mosaic.intake.decomposer - Created Case id=4af0f59b-764d-4845-8806-263b40f4dfc0 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 13:42:24,300 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=91e04685-7f20-46cc-9c18-f5ef6dfd39e2 for proposal_id=073f8798-cbd7-49eb-bea7-ee490b54a22b.
+2026-09-21 13:43:05,893 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=85348e64-8cc6-4aeb-8453-6e1ecec371a7 for proposal_id=e96986b3-f3a6-48cf-b3e9-27b6581ac31d.
+2026-09-21 13:43:05,894 [INFO] mosaic.validation.engine - Starting validation for case_id=4af0f59b-764d-4845-8806-263b40f4dfc0 with 2 proposed actions and 3 active policies.
+2026-09-21 13:43:05,894 [INFO] mosaic.validation.engine - Validation finished for case_id=4af0f59b-764d-4845-8806-263b40f4dfc0. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 13:43:30,767 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 13:43:30,768 [INFO] mosaic.intake.decomposer - Created Case id=0e7f8b4a-25cd-4a79-bf0d-208a66a52311 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 13:44:02,318 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=8ebb8d05-81c7-432f-a763-e1e77e73c171 for proposal_id=a95e933c-e31d-4d6b-bf93-55b4a5f5dfc4.
+2026-09-21 13:44:37,161 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=839e9226-72bd-47d5-aef0-fac3d3a62e6c for proposal_id=a8121be4-f913-4497-a619-4e2991dc0efc.
+2026-09-21 13:44:37,169 [INFO] mosaic.validation.engine - Starting validation for case_id=0e7f8b4a-25cd-4a79-bf0d-208a66a52311 with 2 proposed actions and 3 active policies.
+2026-09-21 13:44:37,170 [INFO] mosaic.validation.engine - Validation finished for case_id=0e7f8b4a-25cd-4a79-bf0d-208a66a52311. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 13:45:10,930 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 3 intent spans.
+2026-09-21 13:45:10,930 [INFO] mosaic.intake.decomposer - Created Case id=5e0e0f3d-b221-4c71-90ba-5baff889c912 for customer=bench_user with 3 intents and 3 sub-tasks.
+2026-09-21 13:45:46,953 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=4235ee0b-3a84-4c2a-8e55-61b365eba51b for proposal_id=4ffcdb38-380b-4e43-a411-1f559227baa9.
+2026-09-21 13:46:22,753 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=1be0c412-e160-41cb-add9-6862d8c19215 for proposal_id=85be11ca-b25b-4367-8409-dc7b837fd81b.
+2026-09-21 13:46:56,035 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=7071fca0-08fb-4640-902a-714a2b1d537c for proposal_id=c288205f-234f-42b7-b512-57af52f0477a.
+2026-09-21 13:46:56,036 [INFO] mosaic.validation.engine - Starting validation for case_id=5e0e0f3d-b221-4c71-90ba-5baff889c912 with 3 proposed actions and 3 active policies.
+2026-09-21 13:46:56,037 [INFO] mosaic.validation.engine - Validation finished for case_id=5e0e0f3d-b221-4c71-90ba-5baff889c912. Verdict=BLOCK, Allowed=1, Blocked=2, Escalated=0
+2026-09-21 13:47:21,478 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 13:47:21,479 [INFO] mosaic.intake.decomposer - Created Case id=4037a5eb-e243-40ae-ad4b-07df3a1617bf for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 13:48:06,417 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=ba757645-6c12-4bb6-bec3-1df1bfbe1ded for proposal_id=844bf42a-8432-496a-bfa5-425b6516d1b5.
+2026-09-21 13:48:42,811 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=f7f3c8ac-31b4-47ae-87e1-6778fb025ce2 for proposal_id=b02ff336-9536-40cc-9133-295e8050331d.
+2026-09-21 13:48:42,812 [INFO] mosaic.validation.engine - Starting validation for case_id=4037a5eb-e243-40ae-ad4b-07df3a1617bf with 2 proposed actions and 3 active policies.
+2026-09-21 13:48:42,812 [INFO] mosaic.validation.engine - Validation finished for case_id=4037a5eb-e243-40ae-ad4b-07df3a1617bf. Verdict=BLOCK, Allowed=0, Blocked=2, Escalated=0
+2026-09-21 13:48:59,632 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:48:59,632 [INFO] mosaic.intake.decomposer - Created Case id=93739667-3f98-429c-891a-9d4c94186e2b for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:49:34,198 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=b3e78720-4a64-4395-babc-161f6c6e7b90 for proposal_id=e27ea041-ad42-414f-b127-cbf208ea76c4.
+2026-09-21 13:49:34,199 [INFO] mosaic.validation.engine - Starting validation for case_id=93739667-3f98-429c-891a-9d4c94186e2b with 1 proposed actions and 3 active policies.
+2026-09-21 13:49:34,199 [INFO] mosaic.validation.engine - Validation finished for case_id=93739667-3f98-429c-891a-9d4c94186e2b. Verdict=BLOCK, Allowed=0, Blocked=1, Escalated=0
+2026-09-21 13:50:04,763 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 13:50:04,763 [INFO] mosaic.intake.decomposer - Created Case id=5fd51640-954a-4bca-a2d2-f6ab5a805efa for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 13:50:39,061 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=e1945a1c-e0b9-4f34-9d3a-865430035bb1 for proposal_id=7cbeae48-825b-41d8-b7d8-8dc9a367e705.
+2026-09-21 13:51:14,435 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=64a16cb9-65cd-4eb7-863c-e1e0dd013e5d for proposal_id=71bd9857-6084-44f2-ac79-6bf1b472d93c.
+2026-09-21 13:51:14,436 [INFO] mosaic.validation.engine - Starting validation for case_id=5fd51640-954a-4bca-a2d2-f6ab5a805efa with 2 proposed actions and 3 active policies.
+2026-09-21 13:51:14,437 [INFO] mosaic.validation.engine - Validation finished for case_id=5fd51640-954a-4bca-a2d2-f6ab5a805efa. Verdict=BLOCK, Allowed=0, Blocked=2, Escalated=0
+2026-09-21 13:51:31,381 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:51:31,382 [INFO] mosaic.intake.decomposer - Created Case id=d61ce306-2118-4369-b732-83eeb582fbd2 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:52:07,551 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=88e4c932-0d7a-4bce-a5e4-3b2ea34d4ec2 for proposal_id=72be8855-3e88-4096-8996-572c0d4b505d.
+2026-09-21 13:52:07,552 [INFO] mosaic.validation.engine - Starting validation for case_id=d61ce306-2118-4369-b732-83eeb582fbd2 with 1 proposed actions and 3 active policies.
+2026-09-21 13:52:10,281 [INFO] mosaic.validation.engine - Validation finished for case_id=d61ce306-2118-4369-b732-83eeb582fbd2. Verdict=ALLOW, Allowed=1, Blocked=0, Escalated=0
+2026-09-21 13:52:26,167 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:52:26,168 [INFO] mosaic.intake.decomposer - Created Case id=a3324cb3-7ced-4d20-a4f2-0dc289264661 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:53:28,239 [ERROR] mosaic.compiler.llm_compiler - LLM provider error during semantic action compilation: Ollama request timed out after 60.0 seconds
+2026-09-21 13:53:28,240 [ERROR] mosaic.evaluation.runner - Error evaluating benchmark case_id=case_005_variant_02: LLM semantic compilation failed: Ollama request timed out after 60.0 seconds
+2026-09-21 13:53:45,932 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:53:45,933 [INFO] mosaic.intake.decomposer - Created Case id=3c92d803-0f99-4c43-afc2-5a25abae2e21 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:54:13,446 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=0729d55f-f84c-49c2-a827-459d96244072 for proposal_id=d21a6a02-7212-4023-ba16-c373901f95b2.
+2026-09-21 13:54:13,447 [INFO] mosaic.validation.engine - Starting validation for case_id=3c92d803-0f99-4c43-afc2-5a25abae2e21 with 1 proposed actions and 3 active policies.
+2026-09-21 13:54:13,447 [INFO] mosaic.validation.engine - Validation finished for case_id=3c92d803-0f99-4c43-afc2-5a25abae2e21. Verdict=ALLOW, Allowed=1, Blocked=0, Escalated=0
+2026-09-21 13:54:29,932 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:54:29,933 [INFO] mosaic.intake.decomposer - Created Case id=733a5a97-ad11-4c72-91bf-33d14521c6c8 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:55:04,203 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=08e35dea-f02a-42fe-bfcf-d3196deb8248 for proposal_id=78776ccf-d6a9-45f2-8459-494e34e9c8b2.
+2026-09-21 13:55:04,204 [INFO] mosaic.validation.engine - Starting validation for case_id=733a5a97-ad11-4c72-91bf-33d14521c6c8 with 1 proposed actions and 3 active policies.
+2026-09-21 13:55:04,204 [INFO] mosaic.validation.engine - Validation finished for case_id=733a5a97-ad11-4c72-91bf-33d14521c6c8. Verdict=ALLOW, Allowed=1, Blocked=0, Escalated=0
+2026-09-21 13:55:19,862 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:55:19,862 [INFO] mosaic.intake.decomposer - Created Case id=ebd3d667-9ef9-4acd-b2dc-d3908d2e87b5 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:55:55,525 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=bf2edec4-8914-4d3f-bd8a-5882001d0b4c for proposal_id=31b0d408-e722-4c0b-a746-afd758623093.
+2026-09-21 13:55:55,525 [INFO] mosaic.validation.engine - Starting validation for case_id=ebd3d667-9ef9-4acd-b2dc-d3908d2e87b5 with 1 proposed actions and 3 active policies.
+2026-09-21 13:55:55,525 [INFO] mosaic.validation.engine - Validation finished for case_id=ebd3d667-9ef9-4acd-b2dc-d3908d2e87b5. Verdict=ALLOW, Allowed=1, Blocked=0, Escalated=0
+2026-09-21 13:56:14,072 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:56:14,072 [INFO] mosaic.intake.decomposer - Created Case id=ac0228a7-63e0-41fb-8708-dcfec8486f19 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:56:49,522 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=01f90d38-abc2-4f6d-8a22-e9f1292c584e for proposal_id=2fc8fad3-d12c-4f4a-828a-ff338ff9dd4f.
+2026-09-21 13:56:49,523 [INFO] mosaic.validation.engine - Starting validation for case_id=ac0228a7-63e0-41fb-8708-dcfec8486f19 with 1 proposed actions and 3 active policies.
+2026-09-21 13:56:49,523 [INFO] mosaic.validation.engine - Validation finished for case_id=ac0228a7-63e0-41fb-8708-dcfec8486f19. Verdict=ALLOW, Allowed=1, Blocked=0, Escalated=0
+2026-09-21 13:57:05,430 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:57:05,430 [INFO] mosaic.intake.decomposer - Created Case id=6959b660-1f8a-4421-a9c8-c1b0be3c2eaf for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:57:52,412 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=cb4caefc-81f4-45fe-b9fa-c6410b93b3e2 for proposal_id=a7d85a68-9f36-406c-8984-930a5a24fe70.
+2026-09-21 13:57:52,413 [INFO] mosaic.validation.engine - Starting validation for case_id=6959b660-1f8a-4421-a9c8-c1b0be3c2eaf with 1 proposed actions and 3 active policies.
+2026-09-21 13:57:52,413 [INFO] mosaic.validation.engine - Validation finished for case_id=6959b660-1f8a-4421-a9c8-c1b0be3c2eaf. Verdict=ALLOW, Allowed=1, Blocked=0, Escalated=0
+2026-09-21 13:58:08,768 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 13:58:08,768 [INFO] mosaic.intake.decomposer - Created Case id=b181bf86-d19b-494f-8022-b72c923de3f9 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 13:58:42,351 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=e9e2ef09-6514-4a30-a533-5c59f769c403 for proposal_id=9cffd446-6a2a-46d0-bdcd-f1c69f1f3764.
+2026-09-21 13:58:42,352 [INFO] mosaic.validation.engine - Starting validation for case_id=b181bf86-d19b-494f-8022-b72c923de3f9 with 1 proposed actions and 3 active policies.
+2026-09-21 13:58:42,352 [INFO] mosaic.validation.engine - Validation finished for case_id=b181bf86-d19b-494f-8022-b72c923de3f9. Verdict=ALLOW, Allowed=1, Blocked=0, Escalated=0
+2026-09-21 13:59:06,620 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 13:59:06,621 [INFO] mosaic.intake.decomposer - Created Case id=7e1f52c5-358a-402f-b434-57c211c4910b for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 13:59:42,395 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=d0a25fec-3148-4c26-a4d8-e26e8c13f4eb for proposal_id=17c65962-d7c1-4f9d-bb22-c894c6f3014e.
+2026-09-21 14:00:17,693 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=1cd9dd60-2151-4a11-a0c3-cf5be26c213a for proposal_id=3414338c-e73a-465f-8c53-3388c71579ee.
+2026-09-21 14:00:17,697 [INFO] mosaic.validation.engine - Starting validation for case_id=7e1f52c5-358a-402f-b434-57c211c4910b with 2 proposed actions and 3 active policies.
+2026-09-21 14:00:17,698 [INFO] mosaic.validation.engine - Validation finished for case_id=7e1f52c5-358a-402f-b434-57c211c4910b. Verdict=ALLOW, Allowed=2, Blocked=0, Escalated=0
+2026-09-21 14:00:32,933 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 14:00:32,933 [INFO] mosaic.intake.decomposer - Created Case id=5a7a0538-2a53-4b2e-b000-43ab565e6534 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 14:01:09,209 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=956fa727-2160-46cd-9261-adff66530df7 for proposal_id=c20963b1-eaee-4854-9b15-4aa7fa1f35bd.
+2026-09-21 14:01:09,210 [INFO] mosaic.validation.engine - Starting validation for case_id=5a7a0538-2a53-4b2e-b000-43ab565e6534 with 1 proposed actions and 3 active policies.
+2026-09-21 14:01:09,210 [INFO] mosaic.validation.engine - Validation finished for case_id=5a7a0538-2a53-4b2e-b000-43ab565e6534. Verdict=BLOCK, Allowed=0, Blocked=1, Escalated=0
+2026-09-21 14:01:34,650 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:01:34,651 [INFO] mosaic.intake.decomposer - Created Case id=4cf242a4-0e90-4c1b-b375-f8b4b6da7535 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:02:09,164 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=5e7a9728-ab57-4a7e-9854-3649598b8cd3 for proposal_id=669127e7-b2ee-4da5-9d81-bc5315b397c2.
+2026-09-21 14:02:43,441 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=1213c4c7-6587-488d-91e8-9d06116cc3d8 for proposal_id=2d6d0450-3b6a-4e34-bbd7-145d3149f380.
+2026-09-21 14:02:43,441 [INFO] mosaic.validation.engine - Starting validation for case_id=4cf242a4-0e90-4c1b-b375-f8b4b6da7535 with 2 proposed actions and 3 active policies.
+2026-09-21 14:02:43,442 [INFO] mosaic.validation.engine - Validation finished for case_id=4cf242a4-0e90-4c1b-b375-f8b4b6da7535. Verdict=BLOCK, Allowed=0, Blocked=2, Escalated=0
+2026-09-21 14:02:58,476 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 14:02:58,477 [INFO] mosaic.intake.decomposer - Created Case id=9ab2e050-7c16-4614-990d-fbcab1f704ca for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 14:03:35,973 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=c7c35f87-c1b3-493e-bbef-3c82cd962d50 for proposal_id=5456ec7e-26ee-48d8-8016-7829caeab034.
+2026-09-21 14:03:35,975 [INFO] mosaic.validation.engine - Starting validation for case_id=9ab2e050-7c16-4614-990d-fbcab1f704ca with 1 proposed actions and 3 active policies.
+2026-09-21 14:03:35,976 [INFO] mosaic.validation.engine - Validation finished for case_id=9ab2e050-7c16-4614-990d-fbcab1f704ca. Verdict=BLOCK, Allowed=0, Blocked=1, Escalated=0
+2026-09-21 14:04:05,322 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:04:05,323 [INFO] mosaic.intake.decomposer - Created Case id=fbaea615-e9f2-40f7-8a04-174f1142a0a2 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:04:40,672 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=52c4c7be-bfe5-462b-aca3-802b10c350a9 for proposal_id=c7bee318-8234-4a59-b2eb-b7aeddcfb712.
+2026-09-21 14:05:35,030 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=695bf30b-b62d-4634-81bc-b2275f0449d4 for proposal_id=fec261d1-b127-48c4-a427-724634240538.
+2026-09-21 14:05:35,037 [INFO] mosaic.validation.engine - Starting validation for case_id=fbaea615-e9f2-40f7-8a04-174f1142a0a2 with 2 proposed actions and 3 active policies.
+2026-09-21 14:05:35,038 [INFO] mosaic.validation.engine - Validation finished for case_id=fbaea615-e9f2-40f7-8a04-174f1142a0a2. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 14:06:06,093 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:06:06,094 [INFO] mosaic.intake.decomposer - Created Case id=e8d55623-c0eb-4f11-9874-7b51b9efd1ff for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:06:44,679 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=26a078a0-d90e-40c6-9e79-125fe60987fe for proposal_id=c79e7606-b763-4114-94f1-eff7077d3b36.
+2026-09-21 14:07:24,474 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=ce725454-9a70-4153-a567-320c62fccdc6 for proposal_id=1be53370-5f17-486b-8415-20757d71c884.
+2026-09-21 14:07:24,475 [INFO] mosaic.validation.engine - Starting validation for case_id=e8d55623-c0eb-4f11-9874-7b51b9efd1ff with 2 proposed actions and 3 active policies.
+2026-09-21 14:07:24,475 [INFO] mosaic.validation.engine - Validation finished for case_id=e8d55623-c0eb-4f11-9874-7b51b9efd1ff. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 14:07:53,651 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:07:53,651 [INFO] mosaic.intake.decomposer - Created Case id=2a48cb4c-02f2-4017-8b34-3d9767f09cf3 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:08:27,956 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=32f6c25b-ff09-4120-9542-23e4ea57b566 for proposal_id=800a2862-86b4-4596-b472-1141d77f3c1f.
+2026-09-21 14:09:01,161 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=242f916f-942a-4379-85b2-d1ce83c8ccd1 for proposal_id=88d8d4c3-6ae2-4f41-8f46-7ceda0f47c61.
+2026-09-21 14:09:01,162 [INFO] mosaic.validation.engine - Starting validation for case_id=2a48cb4c-02f2-4017-8b34-3d9767f09cf3 with 2 proposed actions and 3 active policies.
+2026-09-21 14:09:01,162 [INFO] mosaic.validation.engine - Validation finished for case_id=2a48cb4c-02f2-4017-8b34-3d9767f09cf3. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 14:09:24,951 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:09:24,951 [INFO] mosaic.intake.decomposer - Created Case id=d79ab9e1-06bd-40fc-99ef-1c62fd003c0d for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:09:54,994 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=daafab10-a317-4a7e-8af6-c436e06b89da for proposal_id=faa64c04-9928-44a4-ae11-f0c650604b96.
+2026-09-21 14:10:35,148 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=7f9ced5e-a7a7-4540-8e91-195058578631 for proposal_id=ca865856-04f1-4933-9669-c8cc95c0cfb3.
+2026-09-21 14:10:35,149 [INFO] mosaic.validation.engine - Starting validation for case_id=d79ab9e1-06bd-40fc-99ef-1c62fd003c0d with 2 proposed actions and 3 active policies.
+2026-09-21 14:10:35,149 [INFO] mosaic.validation.engine - Validation finished for case_id=d79ab9e1-06bd-40fc-99ef-1c62fd003c0d. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 14:10:57,215 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:10:57,215 [INFO] mosaic.intake.decomposer - Created Case id=db7edf8e-4887-4a69-9eca-382ee170658e for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:11:29,299 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=035aa141-8151-404f-8e48-be7ebfe64aa7 for proposal_id=e0401852-dc48-4332-881c-7f9cd917921d.
+2026-09-21 14:11:53,258 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=5d8e8ca9-98e4-4ec3-9df0-b037706a3744 for proposal_id=07a32f52-491c-43c7-8f26-af4c023690d6.
+2026-09-21 14:11:53,258 [INFO] mosaic.validation.engine - Starting validation for case_id=db7edf8e-4887-4a69-9eca-382ee170658e with 2 proposed actions and 3 active policies.
+2026-09-21 14:11:53,259 [INFO] mosaic.validation.engine - Validation finished for case_id=db7edf8e-4887-4a69-9eca-382ee170658e. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 14:12:19,938 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:12:19,939 [INFO] mosaic.intake.decomposer - Created Case id=43e6baf9-5b90-44ef-aad1-3667979d3aea for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:12:44,587 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=c8a01ee2-6b3a-4252-ab68-a8624f8c6c20 for proposal_id=507c3910-21f3-4b4f-9091-b5381f6cb1f6.
+2026-09-21 14:13:16,980 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=345f4f89-b13f-44d2-bb82-44b3062522eb for proposal_id=495da117-4ebd-461a-951a-9c9cb293a7d2.
+2026-09-21 14:13:16,981 [INFO] mosaic.validation.engine - Starting validation for case_id=43e6baf9-5b90-44ef-aad1-3667979d3aea with 2 proposed actions and 3 active policies.
+2026-09-21 14:13:16,981 [INFO] mosaic.validation.engine - Validation finished for case_id=43e6baf9-5b90-44ef-aad1-3667979d3aea. Verdict=BLOCK, Allowed=1, Blocked=1, Escalated=0
+2026-09-21 14:13:41,753 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:13:41,753 [INFO] mosaic.intake.decomposer - Created Case id=7e7eeb1c-47cf-4a9b-9334-0c4a26243860 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:14:20,991 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=542a2170-c33f-4c9a-8179-838017ee30b3 for proposal_id=289dd0d7-4004-4b07-baa9-2946e54d0e80.
+2026-09-21 14:14:54,513 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=0d7afa63-92cc-4d0a-8315-7d0f24f4c311 for proposal_id=10ebec1d-5fac-4af4-86fb-e571c2c34a52.
+2026-09-21 14:14:54,513 [INFO] mosaic.validation.engine - Starting validation for case_id=7e7eeb1c-47cf-4a9b-9334-0c4a26243860 with 2 proposed actions and 3 active policies.
+2026-09-21 14:14:54,514 [INFO] mosaic.validation.engine - Validation finished for case_id=7e7eeb1c-47cf-4a9b-9334-0c4a26243860. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=2
+2026-09-21 14:15:18,397 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:15:18,397 [INFO] mosaic.intake.decomposer - Created Case id=0cf38fdb-47b9-423a-9d36-1af9c54d6597 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:15:50,831 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=0cbf1a47-514f-4452-9b97-1fdc91d2b1e7 for proposal_id=ebd6d034-14ac-4865-b8ae-e2cba69c64a3.
+2026-09-21 14:16:23,600 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=f38e6a0d-9ac7-479f-8082-aab249a910b6 for proposal_id=21cac462-8fed-4526-8fbf-d7ab735a28eb.
+2026-09-21 14:16:23,600 [INFO] mosaic.validation.engine - Starting validation for case_id=0cf38fdb-47b9-423a-9d36-1af9c54d6597 with 2 proposed actions and 3 active policies.
+2026-09-21 14:16:23,601 [INFO] mosaic.validation.engine - Validation finished for case_id=0cf38fdb-47b9-423a-9d36-1af9c54d6597. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=2
+2026-09-21 14:16:46,612 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 2 intent spans.
+2026-09-21 14:16:46,613 [INFO] mosaic.intake.decomposer - Created Case id=37ab7c16-f81a-41c1-9ae2-7d7639795989 for customer=bench_user with 2 intents and 2 sub-tasks.
+2026-09-21 14:17:19,268 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=5dee2945-c8b4-463c-9a21-62957ae18280 for proposal_id=f854500a-f2a9-4982-a904-3176832c9d4b.
+2026-09-21 14:17:51,694 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=cf3f3f87-7d09-4e59-9065-ee1e6914f6a6 for proposal_id=e02264c8-6682-42ac-9177-cb6598d46638.
+2026-09-21 14:17:51,695 [INFO] mosaic.validation.engine - Starting validation for case_id=37ab7c16-f81a-41c1-9ae2-7d7639795989 with 2 proposed actions and 3 active policies.
+2026-09-21 14:17:51,695 [INFO] mosaic.validation.engine - Validation finished for case_id=37ab7c16-f81a-41c1-9ae2-7d7639795989. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=2
+2026-09-21 14:18:23,120 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 3 intent spans.
+2026-09-21 14:18:23,121 [INFO] mosaic.intake.decomposer - Created Case id=f1d84c92-dc4b-4a6f-bf3d-bd2b83c58b9b for customer=bench_user with 3 intents and 3 sub-tasks.
+2026-09-21 14:19:01,798 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=0138581e-7d53-4c31-b7a9-fc26a64b4f9e for proposal_id=a88f9cbb-4302-49e8-a44d-0315e455aadb.
+2026-09-21 14:19:32,041 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=dc615b47-26bb-476a-9e51-a3f0e4c289f7 for proposal_id=15179983-75e4-4b38-95dc-1b22559314c8.
+2026-09-21 14:20:03,973 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=23fb0c09-384d-4fc6-891f-72f7238ca665 for proposal_id=f86ccb87-ab6e-40e4-9a27-ecab76b671f1.
+2026-09-21 14:20:03,973 [INFO] mosaic.validation.engine - Starting validation for case_id=f1d84c92-dc4b-4a6f-bf3d-bd2b83c58b9b with 3 proposed actions and 3 active policies.
+2026-09-21 14:20:03,974 [INFO] mosaic.validation.engine - Validation finished for case_id=f1d84c92-dc4b-4a6f-bf3d-bd2b83c58b9b. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=3
+2026-09-21 14:20:17,788 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 14:20:17,788 [INFO] mosaic.intake.decomposer - Created Case id=ebe3c643-238b-4215-bacb-70216ffcc541 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 14:20:49,519 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=8bdfacb2-6214-4ed5-9d35-95935b5f708d for proposal_id=3c1e851b-fd63-4bb2-9aa1-a5b796eb9464.
+2026-09-21 14:20:49,520 [INFO] mosaic.validation.engine - Starting validation for case_id=ebe3c643-238b-4215-bacb-70216ffcc541 with 1 proposed actions and 3 active policies.
+2026-09-21 14:20:49,520 [INFO] mosaic.validation.engine - Validation finished for case_id=ebe3c643-238b-4215-bacb-70216ffcc541. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=1
+2026-09-21 14:21:20,922 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 3 intent spans.
+2026-09-21 14:21:20,923 [INFO] mosaic.intake.decomposer - Created Case id=666a7005-5779-448e-8457-3896d9b9b370 for customer=bench_user with 3 intents and 3 sub-tasks.
+2026-09-21 14:21:54,882 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=a103c423-a2f8-4403-9f1e-cbfbee0bd907 for proposal_id=a0122528-158a-4ad6-b3a9-1ed1bde9ff0f.
+2026-09-21 14:22:26,656 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=74275232-148a-4629-9d51-c8f391087924 for proposal_id=0bd48026-535a-4b64-bc84-dc5d06fe1c05.
+2026-09-21 14:22:58,713 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=65d05b1b-0cc3-451f-94bb-c506fc15ec0f for proposal_id=67ee30c3-9452-4212-b4a9-16cbbd524785.
+2026-09-21 14:22:58,713 [INFO] mosaic.validation.engine - Starting validation for case_id=666a7005-5779-448e-8457-3896d9b9b370 with 3 proposed actions and 3 active policies.
+2026-09-21 14:22:58,714 [INFO] mosaic.validation.engine - Validation finished for case_id=666a7005-5779-448e-8457-3896d9b9b370. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=3
+2026-09-21 14:23:11,732 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 14:23:11,733 [INFO] mosaic.intake.decomposer - Created Case id=7255578c-8a89-4907-8fc1-5876230a1130 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 14:23:48,249 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=9680b746-5379-427f-81a2-c1beb048ef60 for proposal_id=edaaedcc-b6c0-4740-8fca-61e70a102a77.
+2026-09-21 14:23:48,249 [INFO] mosaic.validation.engine - Starting validation for case_id=7255578c-8a89-4907-8fc1-5876230a1130 with 1 proposed actions and 3 active policies.
+2026-09-21 14:23:48,251 [INFO] mosaic.validation.engine - Validation finished for case_id=7255578c-8a89-4907-8fc1-5876230a1130. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=1
+2026-09-21 14:24:02,143 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 14:24:02,144 [INFO] mosaic.intake.decomposer - Created Case id=31904780-1b97-4fa7-8f13-5084c88478db for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 14:24:33,899 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=bd398aa1-0f7d-4245-b6cf-f674a99f6e96 for proposal_id=dde9b3e4-f5cb-4dac-aad2-ab84d04e5cae.
+2026-09-21 14:24:33,900 [INFO] mosaic.validation.engine - Starting validation for case_id=31904780-1b97-4fa7-8f13-5084c88478db with 1 proposed actions and 3 active policies.
+2026-09-21 14:24:33,900 [INFO] mosaic.validation.engine - Validation finished for case_id=31904780-1b97-4fa7-8f13-5084c88478db. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=1
+2026-09-21 14:24:47,543 [INFO] mosaic.intake.llm_decomposer - LLMIntentDecomposer successfully extracted 1 intent spans.
+2026-09-21 14:24:47,543 [INFO] mosaic.intake.decomposer - Created Case id=cae05216-2e71-4141-915f-cb62e2127134 for customer=bench_user with 1 intents and 1 sub-tasks.
+2026-09-21 14:25:16,369 [INFO] mosaic.compiler.llm_compiler - LLMActionCompiler successfully compiled Action id=5d0ced98-edbb-48e9-b95a-41acf9bb33ee for proposal_id=f6ffbcb3-5a9c-433d-b145-126176ce5684.
+2026-09-21 14:25:16,369 [INFO] mosaic.validation.engine - Starting validation for case_id=cae05216-2e71-4141-915f-cb62e2127134 with 1 proposed actions and 3 active policies.
+2026-09-21 14:25:16,370 [INFO] mosaic.validation.engine - Validation finished for case_id=cae05216-2e71-4141-915f-cb62e2127134. Verdict=ESCALATED, Allowed=0, Blocked=0, Escalated=1
+2026-09-21 14:25:16,437 [INFO] phase_7e_v2_runner - ==============================================================
+2026-09-21 14:25:16,438 [INFO] phase_7e_v2_runner - BENCHMARK COMPLETE
+2026-09-21 14:25:16,438 [INFO] phase_7e_v2_runner -   Runtime:          2925.3s
+2026-09-21 14:25:16,441 [INFO] phase_7e_v2_runner -   Total cases:      39
+2026-09-21 14:25:16,441 [INFO] phase_7e_v2_runner -   Completed:        36
+2026-09-21 14:25:16,442 [INFO] phase_7e_v2_runner -   Failed:           3
+2026-09-21 14:25:16,442 [INFO] phase_7e_v2_runner -   Successful calls: 95
+2026-09-21 14:25:16,443 [INFO] phase_7e_v2_runner -   Failed calls:     3
+2026-09-21 14:25:16,443 [INFO] phase_7e_v2_runner - ==============================================================
+2026-09-21 14:25:16,443 [INFO] phase_7e_v2_runner - --- baseline_a_single_intent ---
+2026-09-21 14:25:16,443 [INFO] phase_7e_v2_runner -   Verdict accuracy:   0.2778
+2026-09-21 14:25:16,443 [INFO] phase_7e_v2_runner -   Intent P/R/F1:      1.0000 / 0.7660 / 0.8675
+2026-09-21 14:25:16,444 [INFO] phase_7e_v2_runner -   Conflict P/R/F1:    0.0000 / 0.0000 / 0.0000
+2026-09-21 14:25:16,444 [INFO] phase_7e_v2_runner -   Escalation prec:    1.0000
+2026-09-21 14:25:16,444 [INFO] phase_7e_v2_runner -   False escalation:   0.0000
+2026-09-21 14:25:16,444 [INFO] phase_7e_v2_runner -   Mean latency ms:    0.1
+2026-09-21 14:25:16,444 [INFO] phase_7e_v2_runner -   P95  latency ms:    0.1
+2026-09-21 14:25:16,445 [INFO] phase_7e_v2_runner - --- baseline_b_direct_multi_agent ---
+2026-09-21 14:25:16,445 [INFO] phase_7e_v2_runner -   Verdict accuracy:   0.2778
+2026-09-21 14:25:16,445 [INFO] phase_7e_v2_runner -   Intent P/R/F1:      1.0000 / 1.0000 / 1.0000
+2026-09-21 14:25:16,445 [INFO] phase_7e_v2_runner -   Conflict P/R/F1:    0.0000 / 0.0000 / 0.0000
+2026-09-21 14:25:16,445 [INFO] phase_7e_v2_runner -   Escalation prec:    1.0000
+2026-09-21 14:25:16,445 [INFO] phase_7e_v2_runner -   False escalation:   0.0000
+2026-09-21 14:25:16,445 [INFO] phase_7e_v2_runner -   Mean latency ms:    0.0
+2026-09-21 14:25:16,446 [INFO] phase_7e_v2_runner -   P95  latency ms:    0.1
+2026-09-21 14:25:16,447 [INFO] phase_7e_v2_runner - --- mosaic_validated ---
+2026-09-21 14:25:16,447 [INFO] phase_7e_v2_runner -   Verdict accuracy:   1.0000
+2026-09-21 14:25:16,447 [INFO] phase_7e_v2_runner -   Intent P/R/F1:      1.0000 / 1.0000 / 1.0000
+2026-09-21 14:25:16,447 [INFO] phase_7e_v2_runner -   Conflict P/R/F1:    0.6538 / 0.6538 / 0.6538
+2026-09-21 14:25:16,447 [INFO] phase_7e_v2_runner -   Escalation prec:    1.0000
+2026-09-21 14:25:16,448 [INFO] phase_7e_v2_runner -   False escalation:   0.0000
+2026-09-21 14:25:16,448 [INFO] phase_7e_v2_runner -   Mean latency ms:    76.8
+2026-09-21 14:25:16,448 [INFO] phase_7e_v2_runner -   P95  latency ms:    2.5
+2026-09-21 14:25:16,448 [INFO] phase_7e_v2_runner - Results: evaluation_results\phase_7e_design_c_v2\results.json
+2026-09-21 14:25:16,448 [INFO] phase_7e_v2_runner - Summary: evaluation_results\phase_7e_design_c_v2\summary.json
+2026-09-21 14:25:16,448 [INFO] phase_7e_v2_runner - Log:     evaluation_results\phase_7e_design_c_v2\run.log
