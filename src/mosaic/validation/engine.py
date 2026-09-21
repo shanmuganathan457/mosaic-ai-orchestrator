@@ -5,7 +5,7 @@ PreconditionEvaluator, DependencyEvaluator, PolicyEvaluator, and PostconditionCo
 """
 
 import logging
-from typing import List, Set
+from typing import Dict, List, Set
 from uuid import UUID
 
 from mosaic.domain.models.schemas import (
@@ -113,6 +113,41 @@ class DefaultValidationEngine(BaseValidationEngine):
         else:
             overall_verdict = ValidationVerdict.ALLOW
 
+        # Triage conflicts
+        primary_conflicts: List[Conflict] = []
+        secondary_conflicts: List[Conflict] = []
+
+        action_conflicts_map: Dict[UUID, List[Conflict]] = {}
+        cross_conflicts = []
+        for c in all_conflicts:
+            if c.conflict_type == ConflictType.MUTUALLY_EXCLUSIVE_POSTCONDITION:
+                cross_conflicts.append(c)
+                continue
+            if c.action_id:
+                if c.action_id not in action_conflicts_map:
+                    action_conflicts_map[c.action_id] = []
+                action_conflicts_map[c.action_id].append(c)
+            else:
+                primary_conflicts.append(c)
+
+        for act_id, confs in action_conflicts_map.items():
+            has_escalate = any(c.conflict_type == ConflictType.AMBIGUOUS_EVIDENCE for c in confs)
+            has_missing_dep = any(c.conflict_type == ConflictType.MISSING_DEPENDENCY for c in confs)
+
+            for c in confs:
+                if has_escalate:
+                    if c.conflict_type == ConflictType.AMBIGUOUS_EVIDENCE:
+                        primary_conflicts.append(c)
+                    else:
+                        secondary_conflicts.append(c)
+                else:
+                    if has_missing_dep and c.conflict_type == ConflictType.PRECONDITION_UNSATISFIED:
+                        secondary_conflicts.append(c)
+                    else:
+                        primary_conflicts.append(c)
+
+        primary_conflicts.extend(cross_conflicts)
+
         result = ValidationResult(
             case_id=case_state.case_id,
             verdict=overall_verdict,
@@ -120,6 +155,8 @@ class DefaultValidationEngine(BaseValidationEngine):
             blocked_action_ids=list(blocked_action_ids),
             escalated_action_ids=list(escalated_action_ids),
             conflicts=all_conflicts,
+            primary_conflicts=primary_conflicts,
+            secondary_conflicts=secondary_conflicts,
         )
 
         logger.info(

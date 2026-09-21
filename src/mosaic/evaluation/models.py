@@ -75,6 +75,8 @@ class EvaluationSystemResult(BaseModel):
     action_coverage: float = Field(default=1.0, description="Fraction of expected actions covered by predicted actions.")
     unexpected_action_rate: float = Field(default=0.0, description="Fraction of predicted actions not expected.")
     detected_conflicts: List[ConflictType]
+    primary_conflicts: List[ConflictType] = Field(default_factory=list)
+    secondary_conflicts: List[ConflictType] = Field(default_factory=list)
     expected_conflicts: List[ConflictType]
     conflict_precision: float
     conflict_recall: float

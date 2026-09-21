@@ -90,7 +90,7 @@ def compute_aggregate_metrics(results: List[EvaluationSystemResult], benchmark_c
     total_expected_conflicts: Set[Tuple[str, str]] = set()
 
     for r in results:
-        for c in r.detected_conflicts:
+        for c in r.primary_conflicts:
             total_predicted_conflicts.add((r.case_id, c.value))
         for c in r.expected_conflicts:
             total_expected_conflicts.add((r.case_id, c.value))

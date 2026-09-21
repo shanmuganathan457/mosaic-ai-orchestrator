@@ -225,6 +225,8 @@ class ValidationResult(BaseModel):
     blocked_action_ids: List[UUID] = Field(default_factory=list)
     escalated_action_ids: List[UUID] = Field(default_factory=list)
     conflicts: List[Conflict] = Field(default_factory=list)
+    primary_conflicts: List[Conflict] = Field(default_factory=list)
+    secondary_conflicts: List[Conflict] = Field(default_factory=list)
     evaluated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
@@ -234,6 +236,8 @@ class Escalation(BaseModel):
     case_id: UUID
     reason: str
     conflicts: List[Conflict] = Field(default_factory=list)
+    primary_conflicts: List[Conflict] = Field(default_factory=list)
+    secondary_conflicts: List[Conflict] = Field(default_factory=list)
     suggested_human_actions: List[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

@@ -568,10 +568,10 @@
     },
     "active_flags": [],
     "expected_agent_actions": ["cancel_subscription", "restore_login_access"],
-    "expected_final_verdict": "ALLOW",
-    "expected_conflicts": [],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["MISSING_DEPENDENCY"],
     "expected_escalation_reason": null,
-    "rationale": "Multi-intent cancellation and access restoration variant of case_010."
+    "rationale": "Multi-intent cancellation and access restoration variant of case_010. (Phase 7E Update: restore_login_access legally requires verify_identity, so this case correctly blocks with MISSING_DEPENDENCY.)"
   },
   {
     "case_id": "case_010_variant_02",
@@ -590,10 +590,10 @@
     },
     "active_flags": [],
     "expected_agent_actions": ["restore_login_access", "cancel_subscription"],
-    "expected_final_verdict": "ALLOW",
-    "expected_conflicts": [],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["MISSING_DEPENDENCY"],
     "expected_escalation_reason": null,
-    "rationale": "Reordered intent variant of case_010."
+    "rationale": "Reordered intent variant of case_010. (Phase 7E Update: restore_login_access legally requires verify_identity, so this case correctly blocks with MISSING_DEPENDENCY.)"
   },
   {
     "case_id": "case_010_variant_03",
@@ -612,10 +612,10 @@
     },
     "active_flags": [],
     "expected_agent_actions": ["cancel_subscription", "restore_login_access"],
-    "expected_final_verdict": "ALLOW",
-    "expected_conflicts": [],
+    "expected_final_verdict": "BLOCK",
+    "expected_conflicts": ["MISSING_DEPENDENCY"],
     "expected_escalation_reason": null,
-    "rationale": "Conversational multi-domain variant of case_010."
+    "rationale": "Conversational multi-domain variant of case_010. (Phase 7E Update: restore_login_access legally requires verify_identity, so this case correctly blocks with MISSING_DEPENDENCY.)"
   },
   {
     "case_id": "case_021_variant_01",

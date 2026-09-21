@@ -219,6 +219,8 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
         # Baseline A does NOT run cross-action or state validation -> assumes ALLOW if action created, else ESCALATED if no intent
         predicted_verdict = ValidationVerdict.ALLOW if predicted_actions else ValidationVerdict.ESCALATED
         detected_conflicts: List[ConflictType] = []
+        primary_conflicts: List[ConflictType] = []
+        secondary_conflicts: List[ConflictType] = []
 
         prec, rec, f1 = compute_precision_recall_f1(
             {c.value for c in detected_conflicts},
@@ -295,6 +297,8 @@ class BaselineASingleIntentSystem(BaseResearchSystem):
         # Baseline A: ALLOW if action produced, else ESCALATED (no validation)
         predicted_verdict = ValidationVerdict.ALLOW if predicted_actions else ValidationVerdict.ESCALATED
         detected_conflicts: List[ConflictType] = []
+        primary_conflicts: List[ConflictType] = []
+        secondary_conflicts: List[ConflictType] = []
 
         prec, rec, f1 = compute_precision_recall_f1(
             {c.value for c in detected_conflicts},
@@ -403,6 +407,8 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
         # Baseline B does NOT perform validation -> directly ALLOWs all compiled actions
         predicted_verdict = ValidationVerdict.ALLOW if predicted_actions else ValidationVerdict.ESCALATED
         detected_conflicts: List[ConflictType] = []
+        primary_conflicts: List[ConflictType] = []
+        secondary_conflicts: List[ConflictType] = []
 
         prec, rec, f1 = compute_precision_recall_f1(
             {c.value for c in detected_conflicts},
@@ -473,6 +479,8 @@ class BaselineBDirectMultiAgentSystem(BaseResearchSystem):
         # Baseline B: directly ALLOW all compiled actions — no validation
         predicted_verdict = ValidationVerdict.ALLOW if predicted_actions else ValidationVerdict.ESCALATED
         detected_conflicts: List[ConflictType] = []
+        primary_conflicts: List[ConflictType] = []
+        secondary_conflicts: List[ConflictType] = []
 
         prec, rec, f1 = compute_precision_recall_f1(
             {c.value for c in detected_conflicts},
@@ -610,9 +618,11 @@ class MosaicResearchSystem(BaseResearchSystem):
                 predicted_actions.append(agent_map[span.intent_name])
 
         detected_conflicts = [c.conflict_type for c in validation_result.conflicts]
+        primary_conflicts = [c.conflict_type for c in validation_result.primary_conflicts]
+        secondary_conflicts = [c.conflict_type for c in validation_result.secondary_conflicts]
 
         prec, rec, f1 = compute_precision_recall_f1(
-            {c.value for c in detected_conflicts},
+            {c.value for c in primary_conflicts},
             {c.value for c in case.expected_conflicts},
         )
 
@@ -717,9 +727,11 @@ class MosaicResearchSystem(BaseResearchSystem):
         predicted_actions = [action.action_type for action in shared.compiled_actions]
 
         detected_conflicts = [c.conflict_type for c in validation_result.conflicts]
+        primary_conflicts = [c.conflict_type for c in validation_result.primary_conflicts]
+        secondary_conflicts = [c.conflict_type for c in validation_result.secondary_conflicts]
 
         prec, rec, f1 = compute_precision_recall_f1(
-            {c.value for c in detected_conflicts},
+            {c.value for c in primary_conflicts},
             {c.value for c in case.expected_conflicts},
         )
         i_prec, i_rec, i_f1 = compute_precision_recall_f1(
