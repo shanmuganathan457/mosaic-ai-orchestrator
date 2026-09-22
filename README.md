@@ -1,6 +1,49 @@
 # MOSAIC: Multi-Intent Orchestration & State-Aware Intelligent Coordination
 
-> **A Research Architecture for Cross-Agent Semantic State Validation in Enterprise Customer Support Workflows**
+> **A Research-Oriented Prototype for Cross-Agent State-Aware Deterministic Validation in Enterprise Customer Support Workflows**
+
+---
+
+## Demo
+
+MOSAIC processes natural-language support requests, converts them into structured intents and actions, validates state, dependencies, policies, and conflicts, and produces an `ALLOW`, `BLOCK`, or `ESCALATE` decision.
+
+### ALLOW — Valid Refund
+![ALLOW - Valid Refund](docs/images/demo-allow.png)
+
+### BLOCK — Missing Prerequisite
+![BLOCK - Missing Prerequisite](docs/images/demo-block.png)
+
+### ESCALATE — Human Review
+![ESCALATE - Human Review](docs/images/demo-escalate.png)
+
+### MULTI-INTENT — Multiple Actions
+![MULTI-INTENT - Multiple Actions](docs/images/demo-multi-intent.png)
+
+---
+
+## Demo Interface
+
+MOSAIC includes an interactive React research dashboard connected directly to the FastAPI backend. The interface visualizes each stage of the orchestration and governance lifecycle:
+
+- **Request Form**: Accepts a natural-language customer support request along with optional initial case state facts and active policy flags, then submits the payload to the MOSAIC intake API.
+- **Intent List**: Displays detected customer intents, model confidence scores, intent categories, and supporting verbatim text evidence extracted from the original message.
+- **Action List**: Displays structured semantic actions compiled from the detected intents, including target entity IDs, assigned mock agent handlers, and action risk levels (`HIGH`, `MEDIUM`, `LOW`).
+- **Verdict**: Displays the binding deterministic governance decision (`ALLOW`, `BLOCK`, or `ESCALATED`), accompanied by a human-readable explanation and overall execution status.
+- **Conflict List**: Displays primary blocking conflicts (e.g. unsatisfied preconditions, policy violations) and secondary escalation rules evaluated during deterministic validation.
+- **Execution Panel**: Displays the mock service backend execution log records or human-review escalation routing for each action.
+- **History**: Maintains a interactive log of previous support requests submitted during the session and their respective governance outcomes.
+
+*Note:* MOSAIC is a research-oriented prototype equipped with mock execution adapters. It is designed to demonstrate state-aware validation principles rather than serve as a production customer support system.
+
+---
+
+## Research Documentation
+
+- [MOSAIC Real-World Research Brief](docs/research/MOSAIC_Real_World_Research_Brief.docx)
+- [Architecture Specifications](docs/ARCHITECTURE.md)
+- [Phase 7E Benchmark Evaluation & Interpretation](docs/PHASE_7E_FINAL_RESULTS_AND_INTERPRETATION.md)
+- [Phase 8 End-to-End Demo Protocol](docs/PHASE_8_DEMO.md)
 
 ---
 
@@ -42,17 +85,9 @@ Can a state/dependency-aware validation layer detect operational conflicts betwe
 - [x] **Phase 5B: LLM-Backed Intent Decomposition Engine & Output Integrity Correction** (`src/mosaic/intake/llm_decomposer.py`)
 - [x] **Phase 5C: Structured Semantic Action Compilation** (`src/mosaic/compiler/llm_compiler.py`)
 - [x] **Phase 6: Research Dataset & Evaluation Harness + Integrity Correction** (`src/mosaic/evaluation/`, `tests/fixtures/research_dataset/v1/`)
-  - Ground truth benchmark schema: `BenchmarkCase`, `EvaluationSystemResult`, `AggregateMetrics`
-  - Synthetic dataset v1: 23 controlled scenarios (10 ALLOW, 10 BLOCK, 3 ESCALATED) covering missing preconditions, failed dependencies, cross-action postcondition conflicts, state-dependent execution, and security/compliance escalation
-  - Baselines: Baseline A (Single-Intent Route), Baseline B (Direct Multi-Agent Synthesis without Validation), MOSAIC (State Validation)
-  - Reusable evaluation harness: `EvaluationRunner` producing machine-readable `evaluation_results.json` reports
-  - Objective research metrics: Verdict Accuracy, Micro-Aggregated Intent Precision/Recall/F1, Conflict Precision/Recall/F1, Escalation Precision, False Escalation Rate
 - [x] **Phase 7C: Google Gemini LLM Provider Integration** (`src/mosaic/llm/gemini.py`)
-  - Cloud LLM provider (`GeminiProvider`) using official `google-genai` Python SDK (`from google import genai`).
-  - Provider Factory (`LLMProviderFactory`) support for `mock`, `ollama`, and `gemini`.
-  - Structured output schema generation (`response_mime_type="application/json"`).
-  - Preserved 100% offline default execution (Mock mode) and deterministic validation boundary.
-  - 81 passing unit/integration tests + 2 optional skipped live tests (`tests/test_gemini_provider.py`).
+- [x] **Phase 7E: Benchmark Results & Conflict Evaluation** (`docs/PHASE_7E_FINAL_RESULTS_AND_INTERPRETATION.md`)
+- [x] **Phase 8: End-to-End FastAPI Prototype & React Dashboard** (`src/mosaic/main.py`, `frontend/`, `docs/PHASE_8_DEMO.md`)
 
 ---
 
@@ -86,9 +121,9 @@ MOSAIC supports provider-agnostic execution across three provider strategies via
 
 ---
 
-## 4. System Architecture & Data Flow
+## 5. System Architecture & Data Flow
 
-```
+```text
 Incoming Customer Communication (Raw Message)
               │
     ┌─────────┴─────────┐
@@ -128,68 +163,11 @@ Decomposer            Decomposer
 
 ---
 
-## 5. Repository Structure
-
-```
-mosaic-ai-orchestrator/
-├── docs/
-│   ├── ARCHITECTURE.md          # Architectural specifications & Phase 5B LLM intake
-│   └── RESEARCH_ALIGNMENT.md    # Mapping code modules to research document
-├── src/
-│   └── mosaic/
-│       ├── agents/              # Deterministic Mock Domain Agents
-│       │   ├── __init__.py
-│       │   └── mock_agents.py
-│       ├── compiler/            # Semantic State Compiler (AgentProposal -> Action)
-│       │   ├── __init__.py
-│       │   └── state_compiler.py
-│       ├── config/              # Pydantic-based configuration management
-│       │   ├── __init__.py
-│       │   └── settings.py
-│       ├── domain/
-│       │   ├── models/          # Pydantic v2 core schemas & domain models
-│       │   │   ├── __init__.py
-│       │   │   └── schemas.py
-│       │   └── __init__.py
-│       ├── intake/              # Intake Engines (Deterministic & LLM Strategy)
-│       │   ├── __init__.py
-│       │   ├── decomposer.py
-│       │   └── llm_decomposer.py
-│       ├── llm/                 # Provider-Agnostic LLM Abstraction Layer
-│       │   ├── __init__.py
-│       │   ├── base.py
-│       │   ├── mock.py
-│       │   └── models.py
-│       ├── validation/          # Core deterministic Validation Engine & sub-evaluators
-│       │   ├── __init__.py
-│       │   ├── base.py
-│       │   ├── engine.py
-│       │   └── evaluators.py
-│       ├── __init__.py
-│       ├── main.py              # FastAPI entrypoint & health check endpoint
-│       └── orchestrator.py      # End-to-end pipeline coordinator
-├── tests/
-│   ├── fixtures/
-│   │   ├── __init__.py
-│   │   └── controlled_dataset.py# 10-Case Controlled Test Dataset
-│   ├── __init__.py
-│   ├── test_compiler_and_agents.py
-│   ├── test_domain_models.py
-│   ├── test_end_to_end_pipeline.py
-│   ├── test_intake_and_orchestrator.py
-│   ├── test_llm_abstraction.py
-│   ├── test_llm_decomposer.py
-│   └── test_validation_engine.py
-├── pyproject.toml               # Build & dependency configuration
-└── README.md                    # Project documentation
-```
-
----
-
 ## 6. Setup & How to Run
 
 ### Prerequisites
 - Python 3.12+ installed
+- Node.js 18+ installed
 
 ### Environment Setup
 
@@ -207,18 +185,26 @@ mosaic-ai-orchestrator/
    source .venv/bin/activate
    ```
 
-3. **Install dependencies:**
+3. **Install Python backend dependencies:**
    ```bash
    pip install -e ".[dev]"
    ```
 
-4. **Run Complete Pytest Suite (43 Tests):**
+4. **Run Pytest Suite:**
    ```bash
    python -m pytest
    ```
 
-5. **Start FastAPI Development Server:**
+5. **Start FastAPI Backend Server:**
    ```bash
-   uvicorn mosaic.main:app --reload
+   python src/mosaic/main.py
+   # Server starts on http://localhost:8000
    ```
-   Access health check endpoint at `http://127.0.0.1:8000/health`.
+
+6. **Start React Frontend Dashboard:**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   # Dashboard available at http://localhost:5173
+   ```
