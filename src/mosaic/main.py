@@ -5,7 +5,10 @@ from typing import Dict
 
 from fastapi import FastAPI
 
+from mosaic.api import router as support_router
 from mosaic.config import settings
+
+from fastapi.middleware.cors import CORSMiddleware
 
 # Configure structured logging
 logging.basicConfig(
@@ -19,6 +22,16 @@ app = FastAPI(
     version=settings.VERSION,
     description="Multi-Intent Orchestration & State-Aware Intelligent Coordination API",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(support_router)
 
 
 @app.get("/health", tags=["Health"])

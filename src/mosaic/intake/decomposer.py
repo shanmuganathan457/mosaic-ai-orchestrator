@@ -127,7 +127,7 @@ DEFAULT_PATTERNS = [
     IntentDecompositionPattern(
         category=IntentCategory.SUBSCRIPTION,
         intent_name="cancel_subscription",
-        regex_pattern=r"\b(cancel|terminate|stop|end)( my)? (subscription|plan|membership|recurring)\b",
+        regex_pattern=r"\b(cancel|terminate|stop|end)( my)?( \w+)? (subscription|plan|membership|recurring)\b",
         assigned_agent="SubscriptionMockAgent",
     ),
     IntentDecompositionPattern(
